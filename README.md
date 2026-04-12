@@ -60,5 +60,12 @@ Special thanks to my friend, an enthusiast in developing devices like Flipper Ze
 ---
 
 ### 🌐 Connect with Me
-- **Facebook:** [Javier Siliacay](https://www.facebook.com/siliacayjavier)
-- **Instagram:** [@yaboi_vier](https://www.instagram.com/yaboi_vier)
+<p align="left">
+  <a href="https://www.facebook.com/siliacayjavier">
+    <img src="https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white" />
+  </a>
+  &nbsp;
+  <a href="https://www.instagram.com/yaboi_vier">
+    <img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white" />
+  </a>
+</p>
