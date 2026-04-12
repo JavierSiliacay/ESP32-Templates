@@ -3,8 +3,10 @@ ESP32 (PSRAM) + INMP441 I2S microphone + Gemini Audio understanding
 
 The ESP32 (PSRAM) is connected to an INMP441 I2S microphone to record audio and upload it to Gemini for understanding the audio content.
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2025-8-13 17:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Development Environment
 Arduino IDE 1.8.19
@@ -37,7 +39,7 @@ String geminiKey = "xxxxx";
 
 // Gemini prompt
 String geminiPrompt = "First, convert the audio into text. Based on the text content, determine whether it is related to controlling devices, and respond with JSON data without using Markdown syntax: {\"text\":\"transcribed text content\", \"devices\": [{\"servoAngle\": servo motor control angle value (use the number -1 if unrelated. The maximum servo angle is the number 180, and the minimum is the number 0.)}], \"response\":\"Based on the audio, respond with a chat message of 100 characters or less\"}";
-//String geminiPrompt = "請先將音訊轉成繁體中文文字，根據文字內容判斷是否與控制裝置有關，並以JSON格式資料但不加上Markdown語法回覆: {\"text\":\"音訊轉文字內容\", \"devices\": [{\"servoAngle\":伺服馬達控制的角度值 (若無關則填數字-1。伺服馬達角度最大值為數字180, 最小值為數字0。)}], \"response\":\"依音訊內容聊天，簡短回應100字以內的內容\"}";
+//String geminiPrompt = "請先將音訊轉成繁體中文文字, 根據文字內容判斷是否與控制裝置有關, 並以JSON格式資料但不加上Markdown語法回覆: {\"text\":\"音訊轉文字內容\", \"devices\": [{\"servoAngle\":伺服馬達控制的角度值 (若無關則填數字-1。伺服馬達角度最大值為數字180, 最小值為數字0。)}], \"response\":\"依音訊內容聊天, 簡短回應100字以內的內容\"}";
 //String geminiPrompt = "Audio to Text.";
 
 int pinButton = 12;

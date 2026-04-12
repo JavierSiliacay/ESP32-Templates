@@ -1,7 +1,9 @@
 /*
 ESP32-CAM COCO-SSD Person Detect (Send captured image to GoogleDrive and Linenotify)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2020-2-23 20:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 If the code can't run well because Chrome blocks the funtion, you can use the other code below.
 https://github.com/fustyles/Arduino/tree/master/ESP32-CAM_Tensorflow.js/ESP32-CAM_coco-ssd_PersonDetect_GoogleDrive_Linenotify/ESP32-CAM_coco-ssd_PersonDetect_GoogleDrive_Linenotify1

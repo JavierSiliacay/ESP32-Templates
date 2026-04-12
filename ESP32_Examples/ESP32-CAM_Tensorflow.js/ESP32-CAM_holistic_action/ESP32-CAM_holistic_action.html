@@ -1,11 +1,13 @@
 <!-- 
-Author : ChungYi Fu (Kaohsiung, Taiwan)   2021/6/8 9:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Try it
 https://fustyles.github.io/webduino/CautionArea/ESP32-CAM_HolisticRecognition.html
 
-Chrome瀏覽器設定須更改：允許開啟不安全內容。否則http未加密連結會被阻擋無法串流！若將網頁下載到本機執行，則不用更改安全性設定。
+Chrome瀏覽器設定須更改: 允許開啟不安全內容。否則http未加密連結會被阻擋無法串流！若將網頁下載到本機執行, 則不用更改安全性設定。
 瀏覽器網址執行 chrome://settings/content/siteDetails?site=https://fustyles.github.io
 
 音效下載 (將音效剪輯長度成0.2秒再使用)
@@ -27,7 +29,7 @@ https://mp3cut.net/tw/
     </head>
     <body>
     <figure>
-	  ESP32-CAM IP：<input type="text" id="ip" size="12" value="192.168.">&nbsp;&nbsp;<input type="button" value="設定" onclick="start();">
+	  ESP32-CAM IP: <input type="text" id="ip" size="12" value="192.168.">&nbsp;&nbsp;<input type="button" value="設定" onclick="start();">
       <div id="stream-container" class="image-container">
         <div class="close" id="close-stream">×</div>
         <img id="stream" src="" style="display:none" crossorigin="anonymous">
@@ -212,7 +214,7 @@ https://mp3cut.net/tw/
 		async function DetectImage() {
 		  message.innerHTML = "";
 		  holistic.send({image: aiView}).then(res => {
-			setTimeout(function(){aiStill.click();},100);   //若無法取得畫面可能是硬體效能不足，可改此行程式碼，依硬體效能變更等待時間毫秒數 
+			setTimeout(function(){aiStill.click();},100);   //若無法取得畫面可能是硬體效能不足, 可改此行程式碼, 依硬體效能變更等待時間毫秒數 
 		  }); 
 		}
 
@@ -670,7 +672,7 @@ https://mp3cut.net/tw/
             }
           }
           
-          //新增重啟電源按鈕點選事件 (自訂指令格式：http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9)
+          //新增重啟電源按鈕點選事件 (自訂指令格式: http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9)
           restartButton.onclick = () => {
             fetch(baseHost+"/control?restart");
           }

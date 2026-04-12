@@ -1,7 +1,9 @@
 /*
 WebUSB + Arduino Leonardo  2021-8-12 23:30
-Author : ChungYi Fu (Kaohsiung, Taiwan)
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 https://webusb.github.io/arduino/
 The WebUSB library provides all the extra low-level USB code necessary for WebUSB support except for one thing: 

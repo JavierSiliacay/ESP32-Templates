@@ -1,12 +1,17 @@
 /* 
 ESP-01 + Arduino Uno (AT Command)
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2018-08-27 22:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Expanding Arduino Serial Port Buffer Size
 https://internetofhomethings.com/homethings/?p=927
-https://www.facebook.com/francefu/videos/10211231615856099/
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Control Page (http)
 https://github.com/fustyles/Arduino/blob/master/ESP8266_MyFirmata.html
@@ -14,7 +19,7 @@ https://github.com/fustyles/Arduino/blob/master/ESP8266_MyFirmata.html
 Command Format :  
 http://APIP/?cmd=str1;str2;str3;str4;str5;str6;str7;str8;str9
 
-Default APIP： 192.168.4.1
+Default APIP:  192.168.4.1
 http://192.168.4.1/?ip
 http://192.168.4.1/?mac
 http://192.168.4.1/?restart

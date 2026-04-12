@@ -1,7 +1,9 @@
 /*
 ESP32-CAM Send still using MQTT
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2022-4-13 20:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Library: 
 https://www.arduino.cc/reference/en/libraries/pubsubclient/
@@ -34,7 +36,7 @@ String getData = "";
 
 //Arduino IDE開發版選擇 ESP32 Wrover Module
 
-//ESP32-CAM 安信可模組腳位設定
+//Ai-Thinker module pin settings
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM      0
@@ -54,7 +56,7 @@ String getData = "";
 #define PCLK_GPIO_NUM     22
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
     
   Serial.begin(115200);
   randomSeed(micros());
@@ -132,7 +134,7 @@ void initCamera() {
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
 
-  if(psramFound()){  //是否有PSRAM(Psuedo SRAM)記憶體IC
+  if(psramFound()){  //Whether there is PSRAM memory IC
     config.frame_size = FRAMESIZE_UXGA;
     config.jpeg_quality = 10;
     config.fb_count = 2;
@@ -142,14 +144,14 @@ void initCamera() {
     config.fb_count = 1;
   }
 
-  //視訊初始化
+  //Video initialization
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed with error 0x%x", err);
     ESP.restart();
   }
 
-  //可自訂視訊框架預設大小(解析度大小)
+  //Customizable default frame size
   sensor_t * s = esp_camera_sensor_get();
   // initial sensors are flipped vertically and colors are a bit saturated
   if (s->id.PID == OV3660_PID) {
@@ -158,11 +160,11 @@ void initCamera() {
     s->set_saturation(s, -2); // lower the saturation
   }
   // drop down frame size for higher initial frame rate
-  s->set_framesize(s, FRAMESIZE_HQVGA);    //解析度 SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
-  //解析度太高檔案太大，使用網頁MQTT.js端將無法接收顯示。建議QVGA以下
+  s->set_framesize(s, FRAMESIZE_HQVGA);    //Resolution SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
+  //Resolution太高檔案太大, 使用網頁MQTT.js端將無法接收顯示。建議QVGA以下
     
-  //s->set_vflip(s, 1);  //垂直翻轉
-  //s->set_hmirror(s, 1);  //水平鏡像
+  //s->set_vflip(s, 1);  //Vertical flip
+  //s->set_hmirror(s, 1);  //Horizontal mirror
 
   //閃光燈(GPIO4)
   ledcAttachPin(4, 4);  
@@ -203,7 +205,7 @@ void initWiFi() {
     }
   } 
 
-  if (WiFi.status() != WL_CONNECTED) {    //若連線失敗
+  if (WiFi.status() != WL_CONNECTED) {    //If connection failed
     pinMode(2, OUTPUT);
     for (int k=0;k<2;k++) {
       digitalWrite(2,HIGH);

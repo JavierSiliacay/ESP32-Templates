@@ -1,7 +1,9 @@
 /* 
 NodeMCU ESP12E + DFPlayer Mini MP3
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2022-6-7 20:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 DFPlayer RX -> ESP12E TX 
 DFPlayer TX -> ESP12E RX
@@ -13,11 +15,11 @@ Command Format :
 http://APIP/?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 http://STAIP/?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 
-Default APIP： 192.168.4.1
+Default APIP:  192.168.4.1
 
-STAIP：
-Query： http://192.168.4.1/?ip
-Link：http://192.168.4.1/?resetwifi=ssid;password
+STAIP: 
+Query:  http://192.168.4.1/?ip
+Link: http://192.168.4.1/?resetwifi=ssid;password
 If you don't need to get response from ESP8266 and want to execute commands quickly, 
 you can append a parameter value "stop" at the end of command.
 

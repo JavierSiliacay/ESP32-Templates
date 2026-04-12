@@ -1,7 +1,9 @@
 /*
 ESP32-CAM LineBot using spreadsheet
-Author : ChungYi Fu (Kaohsiung, Taiwan)   2022/8/5 23:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 apps Script
 https://github.com/fustyles/webduino/blob/gs/Linebot_Spreadsheet_googledrive.gs

@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
-#include "FS.h"                  //檔案系統函式
-#include "SD_MMC.h"              //SD卡存取函式
+#include "FS.h"                  //File system functions
+#include "SD_MMC.h"              //SD card access functions
 
 // Enter your WiFi ssid and password
 const char* ssid     = "*****";   //your network SSID

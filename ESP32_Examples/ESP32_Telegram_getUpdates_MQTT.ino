@@ -1,12 +1,14 @@
 /*
 ESP32 Telegram Bot with MQTT
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2022-4-6 18:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
 
-ArduinoJson Library：
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
+
+ArduinoJson Library: 
 https://github.com/bblanchon/ArduinoJson
-PubSubClient Library：
+PubSubClient Library: 
 https://www.arduino.cc/reference/en/libraries/pubsubclient/
 
 Telegram Bot API

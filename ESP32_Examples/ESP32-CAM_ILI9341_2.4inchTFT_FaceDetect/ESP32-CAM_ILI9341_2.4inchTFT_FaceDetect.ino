@@ -1,8 +1,10 @@
 /*
 ESP32-CAM 2.4 inch TFT LCD Display Module (ILI9341, SPI, 240x320)
 Face detect
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2020-12-19 02:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Circuit
 TFT_MOSI --> IO13
@@ -21,7 +23,7 @@ http://www.lcdwiki.com/2.8inch_SPI_Module_ILI9341_SKU:MSP2807
 Refer to
 http://fabacademy.org/2020/labs/seoulinnovation/students/seokmin-park/week9.html
 
-Libraries：
+Libraries: 
 https://www.arduinolibraries.info/libraries/adafruit-gfx-library
 https://www.arduinolibraries.info/libraries/adafruit-ili9341
 */
@@ -29,7 +31,7 @@ https://www.arduinolibraries.info/libraries/adafruit-ili9341
 #include "soc/soc.h"
 #include "soc/rtc_cntl_reg.h"
 #include "esp_camera.h"
-#include "fd_forward.h"          //人臉偵測函式
+#include "fd_forward.h"          //Face detection functions
 #include "SPI.h"
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
@@ -134,11 +136,11 @@ void loop() {
   if (!fb) {
       Serial.println("Camera capture failed");
   } else {
-      image_matrix = dl_matrix3du_alloc(1, fb->width, fb->height, 3);  //分配內部記憶體
+      image_matrix = dl_matrix3du_alloc(1, fb->width, fb->height, 3);  //Allocate internal memory
       if (!image_matrix) {
           Serial.println("dl_matrix3du_alloc failed");
       } else {
-          //臉部偵測參數設定  https://github.com/espressif/esp-face/blob/master/face_detection/README.md
+          //Face detection parameter settings  https://github.com/espressif/esp-face/blob/master/face_detection/README.md
           static mtmn_config_t mtmn_config = {0};
           mtmn_config.type = FAST;
           mtmn_config.min_face = 80;
@@ -154,8 +156,8 @@ void loop() {
           mtmn_config.o_threshold.nms = 0.7;
           mtmn_config.o_threshold.candidate_number = 1;
           
-          fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item);  //影像格式轉換RGB格式
-          box_array_t *net_boxes = face_detect(image_matrix, &mtmn_config);  //偵測人臉取得臉框數據
+          fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item);  //Image format converted to RGB
+          box_array_t *net_boxes = face_detect(image_matrix, &mtmn_config);  //Perform face detection
 
           uint8_t buffer;
           for( int i = 0; i < (160*120); i++) {   //160x120
@@ -168,14 +170,14 @@ void loop() {
           drawRGBBitmap_fb(0,0,(uint16_t*)fb->buf, 160,120);   //160x120
             
           if (net_boxes){
-            Serial.println("faces = " + String(net_boxes->len));  //偵測到的人臉數
+            Serial.println("faces = " + String(net_boxes->len));  //Number of detected faces
             Serial.println();
 
             int16_t x_ = 0;
             int16_t y_ = 0;
             int16_t w_ = 0;
             int16_t h_ = 0;
-            for (int i = 0; i < net_boxes->len; i++){  //列舉人臉位置與大小
+            for (int i = 0; i < net_boxes->len; i++){  //List face position and size
                 //Serial.println("index = " + String(i));
                 x_ = (int16_t)net_boxes->box[i].box_p[0];
                 //Serial.println("x = " + String(x_));
@@ -187,7 +189,7 @@ void loop() {
                 //Serial.println("height = " + String(h_));
                 //Serial.println();
 
-                drawRGBBitmap_rect(x_, y_, w_, h_);  //繪製人臉方框       
+                drawRGBBitmap_rect(x_, y_, w_, h_);  //Draw face rectangle       
             }
 
             free(net_boxes->score);
@@ -196,7 +198,7 @@ void loop() {
             free(net_boxes);
           }
           else {
-            Serial.println("No Face");    //未偵測到的人臉
+            Serial.println("No Face");    //No face detected
             Serial.println();          
           }
 

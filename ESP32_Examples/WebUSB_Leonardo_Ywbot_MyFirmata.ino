@@ -1,7 +1,9 @@
 /*
 Arduino Leonardo + Easy Module Shield V1 of Ywbot
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2019-3-2 18:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 https://webusb.github.io/arduino/
 The WebUSB library Provides all the extra low-level USB code necessary for WebUSB support except for one thing: 

@@ -1,7 +1,9 @@
 /* 
 LinkIt 7697 (Open in Chrome)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2019-08-07 21:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Command Format :  
 http://STAIP/?cmd=str1;str2;str3;str4;str5;str6;str7;str8;str9
@@ -35,12 +37,12 @@ void ExecuteCommand()
     // Feedback="<font color=\"red\">Hello World</font>";
   }
   else if (cmd=="speech") {
-    if (str1.indexOf("on")!=-1||str1.indexOf("開")!=-1) {    //Turn on the LED
+    if (str1.indexOf("on")!=-1||str1.indexOf("on")!=-1) {    //Turn on the LED
       pinMode(LED_BUILTIN, OUTPUT);
       digitalWrite(LED_BUILTIN, 1);
       Feedback="<font color=\"red\">Turn on the LED</font>";
     }
-    else if (str1.indexOf("off")!=-1||str1.indexOf("關")!=-1) {    //Turn off the LED
+    else if (str1.indexOf("off")!=-1||str1.indexOf("off")!=-1) {    //Turn off the LED
       pinMode(LED_BUILTIN, OUTPUT);
       digitalWrite(LED_BUILTIN, 0);
       Feedback="<font color=\"red\">Turn off the LED</font>";

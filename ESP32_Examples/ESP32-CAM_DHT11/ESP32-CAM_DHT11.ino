@@ -1,7 +1,9 @@
 /*
 ESP32-CAM DHT11
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2020-6-25 01:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 DHT11 Library
 https://github.com/fustyles/Arduino/blob/master/ESP32-CAM_DHT11/DHT.zip

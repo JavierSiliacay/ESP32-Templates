@@ -1,19 +1,21 @@
 /*
 ESP32-CAM Face detection (offline)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-6-29 21:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Arduino ESP32 version 1.0.6
 */
 
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
-#include "soc/soc.h"             //用於電源不穩不重開機 
-#include "soc/rtc_cntl_reg.h"    //用於電源不穩不重開機 
-#include "esp_camera.h"          //視訊函式
-#include "fd_forward.h"          //人臉偵測函式
+#include "soc/soc.h"             //For power instability non-reset 
+#include "soc/rtc_cntl_reg.h"    //For power instability non-reset 
+#include "esp_camera.h"          //Video functions
+#include "fd_forward.h"          //Face detection functions
 
-//ESP32-CAM 安信可模組腳位設定
+//Ai-Thinker module pin settings
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM      0
@@ -36,13 +38,13 @@ Arduino ESP32 version 1.0.6
 box_array_t *net_boxes = NULL;
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
     
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  //Enable debug output
   Serial.println();
 
-  //視訊組態設定  https://github.com/espressif/esp32-camera/blob/master/driver/include/esp_camera.h
+  //Video configuration settings  https://github.com/espressif/esp32-camera/blob/master/driver/include/esp_camera.h
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -80,14 +82,14 @@ void setup() {
     config.fb_count = 1;
   }
 
-  //視訊初始化
+  //Video initialization
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed with error 0x%x", err);
     ESP.restart();
   }
 
-  //可自訂視訊框架預設大小(解析度大小)
+  //Customizable default frame size
   sensor_t * s = esp_camera_sensor_get();
   // initial sensors are flipped vertically and colors are a bit saturated
   if (s->id.PID == OV3660_PID) {
@@ -96,10 +98,10 @@ void setup() {
     s->set_saturation(s, -2); // lower the saturation
   }
   // drop down frame size for higher initial frame rate
-  s->set_framesize(s, FRAMESIZE_QVGA);    //解析度 UXGA(1600x1200), SXGA(1280x1024), XGA(1024x768), SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
+  s->set_framesize(s, FRAMESIZE_QVGA);    //Resolution UXGA(1600x1200), SXGA(1280x1024), XGA(1024x768), SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
 
-  //s->set_vflip(s, 1);  //垂直翻轉
-  //s->set_hmirror(s, 1);  //水平鏡像         
+  //s->set_vflip(s, 1);  //Vertical flip
+  //s->set_hmirror(s, 1);  //Horizontal mirror         
 }
 
 void loop() {
@@ -109,11 +111,11 @@ void loop() {
   if (!fb) {
       Serial.println("Camera capture failed");
   } else {
-      image_matrix = dl_matrix3du_alloc(1, fb->width, fb->height, 3);  //分配內部記憶體
+      image_matrix = dl_matrix3du_alloc(1, fb->width, fb->height, 3);  //Allocate internal memory
       if (!image_matrix) {
           Serial.println("dl_matrix3du_alloc failed");
       } else {
-          //臉部偵測參數設定  https://github.com/espressif/esp-face/blob/master/face_detection/README.md
+          //Face detection parameter settings  https://github.com/espressif/esp-face/blob/master/face_detection/README.md
           static mtmn_config_t mtmn_config = {0};
           mtmn_config.type = FAST;
           mtmn_config.min_face = 80;
@@ -129,12 +131,12 @@ void loop() {
           mtmn_config.o_threshold.nms = 0.7;
           mtmn_config.o_threshold.candidate_number = 1;
           
-          fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item);  //影像格式轉換RGB格式
-          net_boxes = face_detect(image_matrix, &mtmn_config);  //執行人臉偵測取得臉框數據
+          fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item);  //Image format converted to RGB
+          net_boxes = face_detect(image_matrix, &mtmn_config);  //Perform face detection
           if (net_boxes){
-            Serial.println("faces = " + String(net_boxes->len));  //偵測到的人臉數
+            Serial.println("faces = " + String(net_boxes->len));  //Number of detected faces
             Serial.println();
-            for (int i = 0; i < net_boxes->len; i++){  //列舉人臉位置與大小
+            for (int i = 0; i < net_boxes->len; i++){  //List face position and size
                 Serial.println("index = " + String(i));
                 int x = (int)net_boxes->box[i].box_p[0];
                 Serial.println("x = " + String(x));
@@ -153,7 +155,7 @@ void loop() {
             net_boxes = NULL;
           }
           else {
-            Serial.println("No Face");    //未偵測到的人臉
+            Serial.println("No Face");    //No face detected
             Serial.println();
           }
           dl_matrix3du_free(image_matrix);

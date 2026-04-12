@@ -1,71 +1,71 @@
 /*
 ESP32-CAM CameraWebServer
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-7-1 00:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Arduino ESP32 version 1.0.6
 
 
 AP IP: 192.168.4.1
-http://192.168.xxx.xxx             //網頁首頁管理介面
-http://192.168.xxx.xxx:81/stream   //取得串流影像        網頁語法 <img src="http://192.168.xxx.xxx:81/stream">
-http://192.168.xxx.xxx/capture     //取得影像           網頁語法 <img src="http://192.168.xxx.xxx/capture">
-http://192.168.xxx.xxx/status      //取得視訊參數值
+http://192.168.xxx.xxx             // Web home page management interface
+http://192.168.xxx.xxx:81/stream   // Get streaming video      Web syntax <img src="http://192.168.xxx.xxx:81/stream">
+http://192.168.xxx.xxx/capture     // Get image      Web syntax <img src="http://192.168.xxx.xxx/capture">
+http://192.168.xxx.xxx/status      // Get video parameter values
 
-設定視訊參數(官方指令格式)  http://192.168.xxx.xxx/control?var=*****&val=*****
+Set video parameters (Official command format)  http://192.168.xxx.xxx/control?var=*****&val=*****
 
-http://192.168.xxx.xxx/control?var=flash&val=value          //閃光燈 value= 0~255
-http://192.168.xxx.xxx/control?var=framesize&val=value      //解析度 value = 21-> QSXGA(2560x1920), 20-> P FHD(1080x1920), 19-> WQXGA(2560x1600), 18-> QHD(2560x1440), 17-> QXGA(2048x1564), 16-> P 3MP(864x1564), 15-> P HD(720x1280), 14-> FHD(1920x1080), 13-> UXGA(1600x1200), 12-> SXGA(1280x1024), 11-> HD(1280x720), 10-> XGA(1024x768), 9-> SVGA(800x600), 8-> VGA(640x480), 7-> HVGA(480x320), 6-> CIF(400x296), 5-> QVGA(320x240), 4-> 240x240, 3-> HQVGA(240x176), 2-> QCIF(176x144), 1-> QQVGA(160x120), 0-> 96x96
-http://192.168.xxx.xxx/control?var=quality&val=value        //畫質 value = 10 ~ 63
-http://192.168.xxx.xxx/control?var=brightness&val=value     //亮度 value = -2 ~ 2
-http://192.168.xxx.xxx/control?var=contrast&val=value       //對比 value = -2 ~ 2
-http://192.168.xxx.xxx/control?var=saturation&val=value     //飽和度 value = -2 ~ 2 
-http://192.168.xxx.xxx/control?var=gainceiling&val=value    //自動增益上限(開啟時) value = 0 ~ 6
-http://192.168.xxx.xxx/control?var=colorbar&val=value       //顏色條畫面 value = 0 or 1
-http://192.168.xxx.xxx/control?var=awb&val=value            //白平衡 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=agc&val=value            //自動增益控制 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=aec&val=value            //自動曝光感測器 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=hmirror&val=value        //水平鏡像 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=vflip&val=value          //垂直翻轉 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=awb_gain&val=value       //自動白平衡增益 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=agc_gain&val=value       //自動增益(關閉時) value = 0 ~ 30
-http://192.168.xxx.xxx/control?var=aec_value&val=value      //曝光值 value = 0 ~ 1200
-http://192.168.xxx.xxx/control?var=aec2&val=value           //自動曝光控制 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=dcw&val=value            //使用自訂影像尺寸 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=bpc&val=value            //黑色像素校正 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=wpc&val=value            //白色像素校正 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=raw_gma&val=value        //原始伽瑪 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=lenc&val=value           //鏡頭校正 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=special_effect&val=value //特效 value = 0 ~ 6
-http://192.168.xxx.xxx/control?var=wb_mode&val=value        //白平衡模式 value = 0 ~ 4
-http://192.168.xxx.xxx/control?var=ae_level&val=value       //自動曝光層級 value = -2 ~ 2 
+http://192.168.xxx.xxx/control?var=flash&val=value          // Flashlight value= 0~255
+http://192.168.xxx.xxx/control?var=framesize&val=value      // Resolution value = 21-> QSXGA(2560x1920), 20-> P FHD(1080x1920), 19-> WQXGA(2560x1600), 18-> QHD(2560x1440), 17-> QXGA(2048x1564), 16-> P 3MP(864x1564), 15-> P HD(720x1280), 14-> FHD(1920x1080), 13-> UXGA(1600x1200), 12-> SXGA(1280x1024), 11-> HD(1280x720), 10-> XGA(1024x768), 9-> SVGA(800x600), 8-> VGA(640x480), 7-> HVGA(480x320), 6-> CIF(400x296), 5-> QVGA(320x240), 4-> 240x240, 3-> HQVGA(240x176), 2-> QCIF(176x144), 1-> QQVGA(160x120), 0-> 96x96
+http://192.168.xxx.xxx/control?var=quality&val=value        // Quality value = 10 ~ 63
+http://192.168.xxx.xxx/control?var=brightness&val=value     // Brightness value = -2 ~ 2
+http://192.168.xxx.xxx/control?var=contrast&val=value       // Contrast value = -2 ~ 2
+http://192.168.xxx.xxx/control?var=saturation&val=value     // Saturation value = -2 ~ 2 
+http://192.168.xxx.xxx/control?var=gainceiling&val=value    // AEC ceiling (when on) value = 0 ~ 6
+http://192.168.xxx.xxx/control?var=colorbar&val=value       // Color bar image value = 0 or 1
+http://192.168.xxx.xxx/control?var=awb&val=value            // White balance value = 0 or 1 
+http://192.168.xxx.xxx/control?var=agc&val=value            // Automatic gain control value = 0 or 1 
+http://192.168.xxx.xxx/control?var=aec&val=value            // Automatic exposure sensor value = 0 or 1 
+http://192.168.xxx.xxx/control?var=hmirror&val=value        // Horizontal mirror value = 0 or 1 
+http://192.168.xxx.xxx/control?var=vflip&val=value          // Vertical flip value = 0 or 1 
+http://192.168.xxx.xxx/control?var=awb_gain&val=value       // Automatic white balance gain value = 0 or 1 
+http://192.168.xxx.xxx/control?var=agc_gain&val=value       // AGC gain (when off) value = 0 ~ 30
+http://192.168.xxx.xxx/control?var=aec_value&val=value      // Exposure value value = 0 ~ 1200
+http://192.168.xxx.xxx/control?var=aec2&val=value           // AEC sensor control value = 0 or 1 
+http://192.168.xxx.xxx/control?var=dcw&val=value            // Use custom image size value = 0 or 1 
+http://192.168.xxx.xxx/control?var=bpc&val=value            // Black pixel correction value = 0 or 1 
+http://192.168.xxx.xxx/control?var=wpc&val=value            // White pixel correction value = 0 or 1 
+http://192.168.xxx.xxx/control?var=raw_gma&val=value        // Raw gamma value = 0 or 1 
+http://192.168.xxx.xxx/control?var=lenc&val=value           // Lens correction value = 0 or 1 
+http://192.168.xxx.xxx/control?var=special_effect&val=value // Special effect value = 0 ~ 6
+http://192.168.xxx.xxx/control?var=wb_mode&val=value        // White balance mode value = 0 ~ 4
+http://192.168.xxx.xxx/control?var=ae_level&val=value       // AEC level value = -2 ~ 2 
 
-視訊參數說明
+Video parameter description
 https://heyrick.eu/blog/index.php?diary=20210418
 */
 
-//輸入WIFI連線帳號密碼
+// Input WIFI connection SSID and password
 const char* ssid = "teacher";
 const char* password = "87654321";
 
-//輸入AP端連線帳號密碼  http://192.168.4.1
-const char* apssid = "esp32-cam";
-const char* appassword = "12345678";         //AP密碼至少要8個字元以上  
+const char* appassword = "12345678";         // AP password must be at least 8 characters
 
-#include "soc/soc.h"             //用於電源不穩不重開機 
-#include "soc/rtc_cntl_reg.h"    //用於電源不穩不重開機 
+#include "soc/soc.h"             // Used for power instability without restarting 
+#include "soc/rtc_cntl_reg.h"    // Used for power instability without restarting 
 
 #include <WiFi.h>
-#include "esp_camera.h"          //視訊函式
-#include "esp_http_server.h"     //HTTP Server函式
-#include "esp_timer.h"           //計時器函式
-#include "img_converters.h"      //影像格式轉換函式
+#include "esp_camera.h"          // Video functions
+#include "esp_http_server.h"     // HTTP Server functions
+#include "esp_timer.h"           // Timer functions
+#include "img_converters.h"      // Image format conversion functions
 
-#include "fb_gfx.h"              //影像繪圖函式
-#include "fd_forward.h"          //人臉偵測函式
-#include "fr_forward.h"          //人臉辨識函式
+#include "fb_gfx.h"              // Image drawing functions
+#include "fd_forward.h"          // Face detection functions
+#include "fr_forward.h"          // Face recognition functions
 
-//ESP32-CAM 安信可模組腳位設定
+// AI-Thinker ESP32-CAM module pin settings
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM      0
@@ -84,12 +84,12 @@ const char* appassword = "12345678";         //AP密碼至少要8個字元以上
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
-//人臉辨識同一人人臉註冊影像數
+// Number of face registration images for the same person
 #define ENROLL_CONFIRM_TIMES 5
-//人臉辨識註冊人數
+// Number of registered persons
 #define FACE_ID_SAVE_NUMBER 7
 
-//設定人臉偵測、辨識框線、文字顏色變數
+// Set variables for face detection/recognition bounding box and text colors
 #define FACE_COLOR_WHITE  0x00FFFFFF
 #define FACE_COLOR_BLACK  0x00000000
 #define FACE_COLOR_RED    0x000000FF
@@ -99,7 +99,7 @@ const char* appassword = "12345678";         //AP密碼至少要8個字元以上
 #define FACE_COLOR_CYAN   (FACE_COLOR_BLUE | FACE_COLOR_GREEN)
 #define FACE_COLOR_PURPLE (FACE_COLOR_BLUE | FACE_COLOR_RED)
 
-//用於計算平均每幀的生成時間
+// Used to calculate the average generation time per frame
 typedef struct {
         size_t size; //number of values used for filtering
         size_t index; //current value index
@@ -113,7 +113,7 @@ typedef struct {
         size_t len;
 } jpg_chunking_t;
 
-//影像傳輸網頁標頭設定
+// Video transmission web header settings
 #define PART_BOUNDARY "123456789000000000000987654321"
 static const char* _STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
 static const char* _STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
@@ -137,13 +137,13 @@ box_array_t *net_boxes = NULL;
 void startCameraServer();
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  // Disable brownout restart setting
     
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  // Enable diagnostic output
   Serial.println();
 
-  //視訊組態設定  https://github.com/espressif/esp32-camera/blob/master/driver/include/esp_camera.h
+  // Video configuration settings  https://github.com/espressif/esp32-camera/blob/master/driver/include/esp_camera.h
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -173,7 +173,7 @@ void setup() {
   //   
   // if PSRAM IC present, init with UXGA resolution and higher JPEG quality
   //                      for larger pre-allocated frame buffer.
-  if(psramFound()){  //是否有PSRAM(Psuedo SRAM)記憶體IC
+  if(psramFound()){  // Whether there is PSRAM memory IC
     config.frame_size = FRAMESIZE_UXGA;
     config.jpeg_quality = 10;
     config.fb_count = 2;
@@ -183,14 +183,14 @@ void setup() {
     config.fb_count = 1;
   }
 
-  //視訊初始化
+  // Video initialization
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed with error 0x%x", err);
     ESP.restart();
   }
 
-  //可自訂視訊框架預設大小(解析度大小)
+  // Customizable video frame default size (resolution size)
   sensor_t * s = esp_camera_sensor_get();
   // initial sensors are flipped vertically and colors are a bit saturated
   if (s->id.PID == OV3660_PID) {
@@ -199,22 +199,22 @@ void setup() {
     s->set_saturation(s, -2); // lower the saturation
   }
   // drop down frame size for higher initial frame rate
-  s->set_framesize(s, FRAMESIZE_CIF);    //解析度 UXGA(1600x1200), SXGA(1280x1024), XGA(1024x768), SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
+  s->set_framesize(s, FRAMESIZE_CIF);    // Resolution UXGA(1600x1200), SXGA(1280x1024), XGA(1024x768), SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
 
-  //s->set_vflip(s, 1);  //垂直翻轉
-  //s->set_hmirror(s, 1);  //水平鏡像
+  //s->set_vflip(s, 1);  // Vertical flip
+  //s->set_hmirror(s, 1);  // Horizontal mirror
           
-  //閃光燈(GPIO4)
+  // Flashlight (GPIO4)
   ledcAttachPin(4, 4);  
   ledcSetup(4, 5000, 8); 
   
-  WiFi.mode(WIFI_AP_STA);  //其他模式 WiFi.mode(WIFI_AP); WiFi.mode(WIFI_STA);
+  WiFi.mode(WIFI_AP_STA);  // Other modes WiFi.mode(WIFI_AP); WiFi.mode(WIFI_STA);
 
   //指定Client端靜態IP
   //WiFi.config(IPAddress(192, 168, 201, 100), IPAddress(192, 168, 201, 2), IPAddress(255, 255, 255, 0));
 
   for (int i=0;i<2;i++) {
-    WiFi.begin(ssid, password);    //執行網路連線
+    WiFi.begin(ssid, password);    // Perform network connection
   
     delay(1000);
     Serial.println("");
@@ -224,17 +224,17 @@ void setup() {
     long int StartTime=millis();
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
-        if ((StartTime+5000) < millis()) break;    //等待10秒連線
+        if ((StartTime+5000) < millis()) break;    // Wait up to 10 seconds for connection
     } 
   
-    if (WiFi.status() == WL_CONNECTED) {    //若連線成功
-      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+    if (WiFi.status() == WL_CONNECTED) {    // If connection successful
+      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   // Set SSID to display Client IP         
       Serial.println("");
       Serial.println("STAIP address: ");
       Serial.println(WiFi.localIP());
       Serial.println("");
   
-      for (int i=0;i<5;i++) {   //若連上WIFI設定閃光燈快速閃爍
+      for (int i=0;i<5;i++) {   // If connected to WIFI, set flashlight to blink rapidly
         ledcWrite(4,10);
         delay(200);
         ledcWrite(4,0);
@@ -244,10 +244,10 @@ void setup() {
     }
   } 
 
-  if (WiFi.status() != WL_CONNECTED) {    //若連線失敗
+  if (WiFi.status() != WL_CONNECTED) {    // If connection failed
     WiFi.softAP((WiFi.softAPIP().toString()+"_"+(String)apssid).c_str(), appassword);         
 
-    for (int i=0;i<2;i++) {    //若連不上WIFI設定閃光燈慢速閃爍
+    for (int i=0;i<2;i++) {    // If cannot connect to WIFI, set flashlight to blink slowly
       ledcWrite(4,10);
       delay(1000);
       ledcWrite(4,0);
@@ -262,9 +262,9 @@ void setup() {
   Serial.println(WiFi.softAPIP());  
   Serial.println("");
   
-  startCameraServer();    //啟動視訊服務器 
+  startCameraServer();    // Start the video server 
 
-  //設定閃光燈為低電位
+  //Set flash light to LOW
   pinMode(4, OUTPUT);
   digitalWrite(4, LOW);              
 }
@@ -274,7 +274,7 @@ void loop() {
   delay(10000);
 }
 
-//計算平均每幀的生成時間
+// Calculate the average generation time per frame
 static ra_filter_t * ra_filter_init(ra_filter_t * filter, size_t sample_size){
     memset(filter, 0, sizeof(ra_filter_t));
 
@@ -303,7 +303,7 @@ static int ra_filter_run(ra_filter_t * filter, int value){
     return filter->sum / filter->count;
 }
 
-//影像輸出人臉辨識文字
+// Output face recognition text on image
 static void rgb_print(dl_matrix3du_t *image_matrix, uint32_t color, const char * str){
     fb_data_t fb;
     fb.width = image_matrix->w;
@@ -314,7 +314,7 @@ static void rgb_print(dl_matrix3du_t *image_matrix, uint32_t color, const char *
     fb_gfx_print(&fb, (fb.width - (strlen(str) * 14)) / 2, 10, color, str);
 }
 
-//影像輸出人臉辨識文字定位處理
+// Floating text positioning for face recognition on image
 static int rgb_printf(dl_matrix3du_t *image_matrix, uint32_t color, const char *format, ...){
     char loc_buf[64];
     char * temp = loc_buf;
@@ -340,7 +340,7 @@ static int rgb_printf(dl_matrix3du_t *image_matrix, uint32_t color, const char *
     return len;
 }
 
-//人臉偵測繪製人臉方框
+// Draw face bounding boxes for face detection
 static void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes, int face_id){
     
     int x, y, w, h, i;
@@ -378,7 +378,7 @@ static void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes, in
     }
 }
 
-//人臉辨識函式
+//Face recognition functions
 static int run_face_recognition(dl_matrix3du_t *image_matrix, box_array_t *net_boxes){
 
     dl_matrix3du_t *aligned_face = NULL;
@@ -390,7 +390,7 @@ static int run_face_recognition(dl_matrix3du_t *image_matrix, box_array_t *net_b
         return matched_id;
     }
     if (align_face(net_boxes, image_matrix, aligned_face) == ESP_OK){
-        if (is_enrolling == 1){  //註冊人臉
+        if (is_enrolling == 1){  // Registering face
             int8_t left_sample_face = enroll_face(&id_list, aligned_face);
 
             if(left_sample_face == (ENROLL_CONFIRM_TIMES - 1)){
@@ -404,18 +404,18 @@ static int run_face_recognition(dl_matrix3du_t *image_matrix, box_array_t *net_b
                 //Serial.printf("Enrolled Face ID: %d\n", enroll_id);
             }
             Serial.println();
-        } else {  //人臉辨識
+        } else {  // Face recognition
             matched_id = recognize_face(&id_list, aligned_face);
-            if (matched_id >= 0) {  //若辨識為已註冊之人臉
+            if (matched_id >= 0) {  // If recognized as a registered face
                 Serial.printf("Match Face ID: %u\n", matched_id);
                 rgb_printf(image_matrix, FACE_COLOR_GREEN, "Hello Subject %u", matched_id);
-            } else {  //若辨識為未註冊之人臉
+            } else {  // If recognized as an unregistered face
                 Serial.println("No Match Found");
                 rgb_print(image_matrix, FACE_COLOR_RED, "Intruder Alert!");
                 matched_id = -1;
             }
         }
-    } else {  //若偵測出人臉，但無法進行識別
+    } else {  // If face detected but cannot be recognized
         Serial.println("Face Not Aligned");
         //rgb_print(image_matrix, FACE_COLOR_YELLOW, "Human Detected");
     }
@@ -436,7 +436,7 @@ static size_t jpg_encode_stream(void * arg, size_t index, const void* data, size
     return len;
 }
 
-//影像截圖
+// Image capture
 static esp_err_t capture_handler(httpd_req_t *req){
     camera_fb_t * fb = NULL;
     esp_err_t res = ESP_OK;
@@ -497,15 +497,15 @@ static esp_err_t capture_handler(httpd_req_t *req){
         return ESP_FAIL;
     }
 
-    net_boxes = face_detect(image_matrix, &mtmn_config);  //執行人臉偵測取得臉框數據
+    net_boxes = face_detect(image_matrix, &mtmn_config);  //Perform face detection
 
     if (net_boxes){
-        //Serial.println("faces = " + String(net_boxes->len));  //偵測到的人臉數
+        //Serial.println("faces = " + String(net_boxes->len));  // Number of detected faces
         detected = true;
         if(recognition_enabled){
-            face_id = run_face_recognition(image_matrix, net_boxes);  //執行人臉辨識
+            face_id = run_face_recognition(image_matrix, net_boxes);  // Execute face recognition
         }
-        draw_face_boxes(image_matrix, net_boxes, face_id);  //繪製人臉方框
+        draw_face_boxes(image_matrix, net_boxes, face_id);  //Draw face rectangle
         
         dl_lib_free(net_boxes->score);
         dl_lib_free(net_boxes->box);
@@ -527,7 +527,7 @@ static esp_err_t capture_handler(httpd_req_t *req){
     return res;
 }
 
-//影像串流
+// Video streaming
 static esp_err_t stream_handler(httpd_req_t *req){
     camera_fb_t * fb = NULL;
     esp_err_t res = ESP_OK;
@@ -596,19 +596,19 @@ static esp_err_t stream_handler(httpd_req_t *req){
                         fr_ready = esp_timer_get_time();
                         net_boxes = NULL;
                         if(detection_enabled){
-                            net_boxes = face_detect(image_matrix, &mtmn_config);  //執行人臉偵測取得臉框數據
+                            net_boxes = face_detect(image_matrix, &mtmn_config);  // Execute face detection to obtain face box data
                         }
                         fr_face = esp_timer_get_time();
                         fr_recognize = fr_face;
                         if (net_boxes || fb->format != PIXFORMAT_JPEG){
                             if(net_boxes){
-                                //Serial.println("faces = " + String(net_boxes->len));  //偵測到的人臉數
+                                //Serial.println("faces = " + String(net_boxes->len));  // Number of detected faces
                                 detected = true;
                                 if(recognition_enabled){
-                                    face_id = run_face_recognition(image_matrix, net_boxes);  //執行人臉辨識
+                                    face_id = run_face_recognition(image_matrix, net_boxes);  // Execute face recognition
                                 }
                                 fr_recognize = esp_timer_get_time();
-                                draw_face_boxes(image_matrix, net_boxes, face_id);  //繪製人臉方框
+                                draw_face_boxes(image_matrix, net_boxes, face_id);  // Draw face bounding boxes
 
                                 dl_lib_free(net_boxes->score);
                                 dl_lib_free(net_boxes->box);
@@ -681,12 +681,12 @@ static esp_err_t stream_handler(httpd_req_t *req){
     return res;
 }
 
-//網址指令參數處理
+// Handle URL command parameters
 static esp_err_t cmd_handler(httpd_req_t *req){
-    char*  buf;       //存取網址後帶的參數字串
+    char*  buf;       // Access URL parameter string
     size_t buf_len;
-    char variable[32] = {0,};  //存取參數var值，可修改陣列長度。
-    char value[32] = {0,};     //存取參數val值，可修改陣列長度。
+    char variable[32] = {0,};  // Store param 'var' value, array length can be modified.
+    char value[32] = {0,};     // Store param 'val' value, array length can be modified.
 
     buf_len = httpd_req_get_url_query_len(req) + 1;
     if (buf_len > 1) {
@@ -695,7 +695,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
             httpd_resp_send_500(req);
             return ESP_FAIL;
         }
-        if (httpd_req_get_url_query_str(req, buf, buf_len) == ESP_OK) {  //拆解網址後帶的參數字串
+        if (httpd_req_get_url_query_str(req, buf, buf_len) == ESP_OK) {  // Parse URL parameter string
             if (httpd_query_key_value(buf, "var", variable, sizeof(variable)) == ESP_OK &&
                 httpd_query_key_value(buf, "val", value, sizeof(value)) == ESP_OK) {
             } else {
@@ -714,44 +714,44 @@ static esp_err_t cmd_handler(httpd_req_t *req){
         return ESP_FAIL;
     }
 
-    int val = atoi(value);  //將val值轉換為整數，原為char格式
+    int val = atoi(value);  // Convert 'val' to integer (was char type)
     sensor_t * s = esp_camera_sensor_get();
     int res = 0;
 
-    if(!strcmp(variable, "framesize")) {  //解析度
+    if(!strcmp(variable, "framesize")) {  // Resolution
         if(s->pixformat == PIXFORMAT_JPEG) res = s->set_framesize(s, (framesize_t)val);
     }
-    else if(!strcmp(variable, "quality")) res = s->set_quality(s, val);  //畫質
-    else if(!strcmp(variable, "contrast")) res = s->set_contrast(s, val);  //對比
-    else if(!strcmp(variable, "brightness")) res = s->set_brightness(s, val);  //亮度
-    else if(!strcmp(variable, "saturation")) res = s->set_saturation(s, val);  //飽和度
-    else if(!strcmp(variable, "gainceiling")) res = s->set_gainceiling(s, (gainceiling_t)val);  //自動增益上限(開啟時)
-    else if(!strcmp(variable, "colorbar")) res = s->set_colorbar(s, val);  //顏色條畫面
-    else if(!strcmp(variable, "awb")) res = s->set_whitebal(s, val);  //白平衡
-    else if(!strcmp(variable, "agc")) res = s->set_gain_ctrl(s, val);  //自動增益控制
-    else if(!strcmp(variable, "aec")) res = s->set_exposure_ctrl(s, val);  //自動曝光感測器
-    else if(!strcmp(variable, "hmirror")) res = s->set_hmirror(s, val);  //水平鏡像
-    else if(!strcmp(variable, "vflip")) res = s->set_vflip(s, val);  //垂直翻轉
-    else if(!strcmp(variable, "awb_gain")) res = s->set_awb_gain(s, val);  //自動白平衡增益
-    else if(!strcmp(variable, "agc_gain")) res = s->set_agc_gain(s, val);  //自動增益(關閉時)
-    else if(!strcmp(variable, "aec_value")) res = s->set_aec_value(s, val);  //曝光值
-    else if(!strcmp(variable, "aec2")) res = s->set_aec2(s, val);  //自動曝光控制
-    else if(!strcmp(variable, "dcw")) res = s->set_dcw(s, val);  //使用自訂影像尺寸
-    else if(!strcmp(variable, "bpc")) res = s->set_bpc(s, val);  //黑色像素校正
-    else if(!strcmp(variable, "wpc")) res = s->set_wpc(s, val);  //白色像素校正
-    else if(!strcmp(variable, "raw_gma")) res = s->set_raw_gma(s, val);  //原始伽瑪
-    else if(!strcmp(variable, "lenc")) res = s->set_lenc(s, val);  //鏡頭校正
-    else if(!strcmp(variable, "special_effect")) res = s->set_special_effect(s, val);  //特效
-    else if(!strcmp(variable, "wb_mode")) res = s->set_wb_mode(s, val);  //白平衡模式
-    else if(!strcmp(variable, "ae_level")) res = s->set_ae_level(s, val);  //自動曝光層級
-    else if(!strcmp(variable, "face_detect")) {  //人臉偵測
+    else if(!strcmp(variable, "quality")) res = s->set_quality(s, val);  // Quality
+    else if(!strcmp(variable, "contrast")) res = s->set_contrast(s, val);  // Contrast
+    else if(!strcmp(variable, "brightness")) res = s->set_brightness(s, val);  // Brightness
+    else if(!strcmp(variable, "saturation")) res = s->set_saturation(s, val);  // Saturation
+    else if(!strcmp(variable, "gainceiling")) res = s->set_gainceiling(s, (gainceiling_t)val);  // AEC ceiling (when on)
+    else if(!strcmp(variable, "colorbar")) res = s->set_colorbar(s, val);  // Color bar image
+    else if(!strcmp(variable, "awb")) res = s->set_whitebal(s, val);  // White balance
+    else if(!strcmp(variable, "agc")) res = s->set_gain_ctrl(s, val);  // AGC control
+    else if(!strcmp(variable, "aec")) res = s->set_exposure_ctrl(s, val);  // AEC sensor
+    else if(!strcmp(variable, "hmirror")) res = s->set_hmirror(s, val);  // Horizontal mirror
+    else if(!strcmp(variable, "vflip")) res = s->set_vflip(s, val);  // Vertical flip
+    else if(!strcmp(variable, "awb_gain")) res = s->set_awb_gain(s, val);  // AWB gain
+    else if(!strcmp(variable, "agc_gain")) res = s->set_agc_gain(s, val);  // AGC gain (when off)
+    else if(!strcmp(variable, "aec_value")) res = s->set_aec_value(s, val);  // Exposure value
+    else if(!strcmp(variable, "aec2")) res = s->set_aec2(s, val);  // AEC sensor control
+    else if(!strcmp(variable, "dcw")) res = s->set_dcw(s, val);  // Use custom image size
+    else if(!strcmp(variable, "bpc")) res = s->set_bpc(s, val);  // Black pixel correction
+    else if(!strcmp(variable, "wpc")) res = s->set_wpc(s, val);  // White pixel correction
+    else if(!strcmp(variable, "raw_gma")) res = s->set_raw_gma(s, val);  // Raw gamma
+    else if(!strcmp(variable, "lenc")) res = s->set_lenc(s, val);  // Lens correction
+    else if(!strcmp(variable, "special_effect")) res = s->set_special_effect(s, val);  // Special effect
+    else if(!strcmp(variable, "wb_mode")) res = s->set_wb_mode(s, val);  // White balance mode
+    else if(!strcmp(variable, "ae_level")) res = s->set_ae_level(s, val);  // AEC level
+    else if(!strcmp(variable, "face_detect")) {  // Face detection
         detection_enabled = val;
         if(!detection_enabled) {
             recognition_enabled = 0;
         }
     }
-    else if(!strcmp(variable, "face_enroll")) is_enrolling = val;  //人臉註冊
-    else if(!strcmp(variable, "face_recognize")) {  //人臉辨識
+    else if(!strcmp(variable, "face_enroll")) is_enrolling = val;  // Face registration
+    else if(!strcmp(variable, "face_recognize")) {  // Face recognition
         recognition_enabled = val;
         if(recognition_enabled){
             detection_enabled = val;
@@ -769,7 +769,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
     return httpd_resp_send(req, NULL, 0);
 }
 
-//設定選單初始值取回json格式
+// Return setting menu initial values in JSON format
 static esp_err_t status_handler(httpd_req_t *req){
     static char json_response[1024];
 
@@ -2478,7 +2478,7 @@ void startCameraServer(){
     
     Serial.printf("Starting web server on port: '%d'\n", config.server_port);  //TCP Port
     if (httpd_start(&camera_httpd, &config) == ESP_OK) {
-        //註冊自訂網址路徑對應執行的函式
+        //Register custom URL path handlers
         httpd_register_uri_handler(camera_httpd, &index_uri);
         httpd_register_uri_handler(camera_httpd, &cmd_uri);
         httpd_register_uri_handler(camera_httpd, &status_uri);

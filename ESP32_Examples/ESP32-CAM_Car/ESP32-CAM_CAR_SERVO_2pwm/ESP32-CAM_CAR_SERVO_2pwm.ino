@@ -1,7 +1,9 @@
 /*
 ESP32-CAM Remote Control Car 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2022-4-27 20:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 //If you use Motor Driver IC L9110(s), it can't work well.
 Motor Driver IC -> PWM1(gpio12, gpio13), PWM2(gpio14, gpio15)
@@ -128,7 +130,7 @@ void setup() {
   //WiFi.config(IPAddress(192, 168, 201, 100), IPAddress(192, 168, 201, 2), IPAddress(255, 255, 255, 0));
 
   for (int i=0;i<2;i++) {
-    WiFi.begin(ssid, password);    //執行網路連線
+    WiFi.begin(ssid, password);    //Start network connection
   
     delay(1000);
     Serial.println("");
@@ -138,11 +140,11 @@ void setup() {
     long int StartTime=millis();
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
-        if ((StartTime+5000) < millis()) break;    //等待10秒連線
+        if ((StartTime+5000) < millis()) break;    //Wait 10 seconds for connection
     } 
   
-    if (WiFi.status() == WL_CONNECTED) {    //若連線成功
-      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+    if (WiFi.status() == WL_CONNECTED) {    //If connection successful
+      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //Set SSID to show client IP         
       Serial.println("");
       Serial.println("STAIP address: ");
       Serial.println(WiFi.localIP());
@@ -158,7 +160,7 @@ void setup() {
     }
   } 
 
-  if (WiFi.status() != WL_CONNECTED) {    //若連線失敗
+  if (WiFi.status() != WL_CONNECTED) {    //If connection failed
     WiFi.softAP((WiFi.softAPIP().toString()+"_"+(String)apssid).c_str(), appassword);         
 
     for (int i=0;i<2;i++) {    //若連不上WIFI設定閃光燈慢速閃爍
@@ -178,7 +180,7 @@ void setup() {
   
   startCameraServer(); 
 
-  //設定閃光燈為低電位
+  //Set flash light to LOW
   pinMode(4, OUTPUT);
   digitalWrite(4, LOW);
 }

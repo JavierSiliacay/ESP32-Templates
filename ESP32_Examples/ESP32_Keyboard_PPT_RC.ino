@@ -1,7 +1,9 @@
 /*
 ESP32 Keyboard RC for PPT
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2022-1-25 08:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Library: 
 https://github.com/T-vK/ESP32-BLE-Keyboard
@@ -13,7 +15,7 @@ Command Format :
 http://APIP/?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 http://STAIP/?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 
-Default APIP： 192.168.4.1
+Default APIP:  192.168.4.1
 
 http://192.168.xxx.xxx/?ip
 http://192.168.xxx.xxx/?mac
@@ -261,7 +263,7 @@ void initWiFi() {
     } 
   
     if (WiFi.status() == WL_CONNECTED) {
-      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //Set SSID to show client IP         
       Serial.println("");
       Serial.println("STAIP address: ");
       Serial.println(WiFi.localIP());
@@ -282,7 +284,7 @@ void initWiFi() {
     }
   } 
 
-  if (WiFi.status() != WL_CONNECTED) {    //若連線失敗
+  if (WiFi.status() != WL_CONNECTED) {    //If connection failed
     WiFi.softAP((WiFi.softAPIP().toString()+"_"+(String)apssid).c_str(), appassword);         
 
     pinMode(2, OUTPUT);

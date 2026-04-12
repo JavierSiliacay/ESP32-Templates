@@ -1,7 +1,9 @@
 /*
 ESP32-CAM 人體移動感測器啟動上傳影像到Telegram
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2020-8-15 00:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 人體移動感測器 -> GND, gpio13, 3.3V
 */

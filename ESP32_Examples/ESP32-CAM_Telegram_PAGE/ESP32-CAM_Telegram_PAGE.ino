@@ -1,7 +1,9 @@
  /*
 ESP32-CAM save a captured photo to Telegram
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2020-1-18 16:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 */
 
 // Enter your WiFi ssid and password
@@ -15,8 +17,8 @@ const char* appassword = "12345678";         //AP password require at least 8 ch
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include "esp_camera.h"          //視訊
-#include "soc/soc.h"             //用於電源不穩不重開機 
-#include "soc/rtc_cntl_reg.h"    //用於電源不穩不重開機
+#include "soc/soc.h"             //For power instability non-reset 
+#include "soc/rtc_cntl_reg.h"    //For power instability non-reset
 
 // WARNING!!! Make sure that you have either selected ESP32 Wrover Module,
 //            or another board which has PSRAM enabled
@@ -239,13 +241,13 @@ void ExecuteCommand()
 }
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
   
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  //Enable debug output
   Serial.println();
 
-  //視訊組態設定
+  //Video configuration settings
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -267,7 +269,7 @@ void setup() {
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   //https://github.com/espressif/esp32-camera/blob/master/driver/include/sensor.h
-  config.pixel_format = PIXFORMAT_JPEG;    //影像格式：RGB565|YUV422|GRAYSCALE|JPEG|RGB888|RAW|RGB444|RGB555
+  config.pixel_format = PIXFORMAT_JPEG;    //影像格式: RGB565|YUV422|GRAYSCALE|JPEG|RGB888|RAW|RGB444|RGB555
   //init with high specs to pre-allocate larger buffers
   if(psramFound()){
     config.frame_size = FRAMESIZE_UXGA;
@@ -279,7 +281,7 @@ void setup() {
     config.fb_count = 1;
   }
   
-  //視訊初始化
+  //Video initialization
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed with error 0x%x", err);
@@ -309,7 +311,7 @@ void setup() {
   //指定Client端靜態IP
   //WiFi.config(IPAddress(192, 168, 201, 100), IPAddress(192, 168, 201, 2), IPAddress(255, 255, 255, 0));
 
-  WiFi.begin(ssid, password);    //執行網路連線
+  WiFi.begin(ssid, password);    //Start network connection
 
   delay(1000);
   Serial.println("");
@@ -319,11 +321,11 @@ void setup() {
   long int StartTime=millis();
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    if ((StartTime+10000) < millis()) break;    //等待10秒連線
+    if ((StartTime+10000) < millis()) break;    //Wait 10 seconds for connection
   } 
 
-  if (WiFi.status() == WL_CONNECTED) {    //若連線成功
-    WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+  if (WiFi.status() == WL_CONNECTED) {    //If connection successful
+    WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //Set SSID to show client IP         
     Serial.println("");
     Serial.println("STAIP address: ");
     Serial.println(WiFi.localIP()); 
@@ -545,7 +547,7 @@ String sendCapturedImage2Telegram(String token, String chat_id) {
 }
 
 
-//拆解命令字串置入變數
+//Decompose command string and put into variables
 void getCommand(char c)
 {
   if (c=='?') ReceiveState=1;

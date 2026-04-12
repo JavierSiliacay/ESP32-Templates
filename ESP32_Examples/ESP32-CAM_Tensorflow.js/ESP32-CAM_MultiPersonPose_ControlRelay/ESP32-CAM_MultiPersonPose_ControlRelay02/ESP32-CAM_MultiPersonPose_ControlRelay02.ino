@@ -1,10 +1,12 @@
 /*
 ESP32-CAM MULTI-PERSON POSE Estimation
 Open the page in Chrome.
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-7-3 22:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
 
-打開: 拉弓動作.右手腕在肩膀右上，左手腕在左胸，兩手腕連線傾斜角度20~60度
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
+
+打開: 拉弓動作.右手腕在肩膀右上, 左手腕在左胸, 兩手腕連線傾斜角度20~60度
 Turn on: Superman starts flying. Your right hand must be above your nose. Your wrists are tilted on a 45 degree axis.
 關閉: 兩手腕垂直高舉
 Turn off: Raise your two hands above your nose
@@ -20,7 +22,7 @@ http://192.168.xxx.xxx/status      //取得視訊參數值
 http://APIP/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 http://STAIP/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 
-預設AP端IP： 192.168.4.1
+預設AP端IP:  192.168.4.1
 
 自訂指令格式 http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 http://192.168.xxx.xxx/control?ip                      //取得APIP, STAIP
@@ -43,9 +45,9 @@ http://192.168.xxx.xxx/control?var=hmirror&val=value      // value = 0 or 1
 http://192.168.xxx.xxx/control?var=vflip&val=value        // value = 0 or 1 
 http://192.168.xxx.xxx/control?var=flash&val=value        // value = 0 ~ 255   
       
-查詢Client端IP：
-查詢IP：http://192.168.4.1/?ip
-重設網路：http://192.168.4.1/?resetwifi=ssid;password
+查詢Client端IP: 
+查詢IP: http://192.168.4.1/?ip
+重設網路: http://192.168.4.1/?resetwifi=ssid;password
 */
 
 //輸入WIFI連線帳號密碼
@@ -59,9 +61,9 @@ const char* appassword = "12345678";         //AP密碼至少要8個字元以上
 #include <WiFi.h>
 #include <esp32-hal-ledc.h>      //用於控制伺服馬達
 #include "esp_camera.h"          //視訊
-#include "Base64.h"              //用於轉換視訊影像格式為base64格式，易於上傳google雲端硬碟或資料庫
-#include "soc/soc.h"             //用於電源不穩不重開機 
-#include "soc/rtc_cntl_reg.h"    //用於電源不穩不重開機 
+#include "Base64.h"              //用於轉換視訊影像格式為base64格式, 易於上傳google雲端硬碟或資料庫
+#include "soc/soc.h"             //For power instability non-reset 
+#include "soc/rtc_cntl_reg.h"    //For power instability non-reset 
 
 //官方函式庫
 #include "esp_http_server.h"
@@ -124,13 +126,13 @@ httpd_handle_t camera_httpd = NULL;
 #define PCLK_GPIO_NUM     22
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
     
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  //Enable debug output
   Serial.println();
 
-  //視訊組態設定  https://github.com/espressif/esp32-camera/blob/master/driver/include/esp_camera.h
+  //Video configuration settings  https://github.com/espressif/esp32-camera/blob/master/driver/include/esp_camera.h
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -160,7 +162,7 @@ void setup() {
   //   
   // if PSRAM IC present, init with UXGA resolution and higher JPEG quality
   //                      for larger pre-allocated frame buffer.
-  if(psramFound()){  //是否有PSRAM(Psuedo SRAM)記憶體IC
+  if(psramFound()){  //Whether there is PSRAM memory IC
     config.frame_size = FRAMESIZE_UXGA;
     config.jpeg_quality = 10;
     config.fb_count = 2;
@@ -170,14 +172,14 @@ void setup() {
     config.fb_count = 1;
   }
 
-  //視訊初始化
+  //Video initialization
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed with error 0x%x", err);
     ESP.restart();
   }
 
-  //可自訂視訊框架預設大小(解析度大小)
+  //Customizable default frame size
   sensor_t * s = esp_camera_sensor_get();
   // initial sensors are flipped vertically and colors are a bit saturated
   if (s->id.PID == OV3660_PID) {
@@ -186,10 +188,10 @@ void setup() {
     s->set_saturation(s, -2); // lower the saturation
   }
   // drop down frame size for higher initial frame rate
-  s->set_framesize(s, FRAMESIZE_CIF);    //解析度 UXGA(1600x1200), SXGA(1280x1024), XGA(1024x768), SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
+  s->set_framesize(s, FRAMESIZE_CIF);    //Resolution UXGA(1600x1200), SXGA(1280x1024), XGA(1024x768), SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
 
-  //s->set_vflip(s, 1);  //垂直翻轉
-  //s->set_hmirror(s, 1);  //水平鏡像
+  //s->set_vflip(s, 1);  //Vertical flip
+  //s->set_hmirror(s, 1);  //Horizontal mirror
   
   //閃光燈(GPIO4)
   ledcAttachPin(4, 4);  
@@ -201,7 +203,7 @@ void setup() {
   //WiFi.config(IPAddress(192, 168, 201, 100), IPAddress(192, 168, 201, 2), IPAddress(255, 255, 255, 0));
 
   for (int i=0;i<2;i++) {
-    WiFi.begin(ssid, password);    //執行網路連線
+    WiFi.begin(ssid, password);    //Start network connection
   
     delay(1000);
     Serial.println("");
@@ -211,11 +213,11 @@ void setup() {
     long int StartTime=millis();
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
-        if ((StartTime+5000) < millis()) break;    //等待10秒連線
+        if ((StartTime+5000) < millis()) break;    //Wait 10 seconds for connection
     } 
   
-    if (WiFi.status() == WL_CONNECTED) {    //若連線成功
-      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+    if (WiFi.status() == WL_CONNECTED) {    //If connection successful
+      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //Set SSID to show client IP         
       Serial.println("");
       Serial.println("STAIP address: ");
       Serial.println(WiFi.localIP());
@@ -231,7 +233,7 @@ void setup() {
     }
   } 
 
-  if (WiFi.status() != WL_CONNECTED) {    //若連線失敗
+  if (WiFi.status() != WL_CONNECTED) {    //If connection failed
     WiFi.softAP((WiFi.softAPIP().toString()+"_"+(String)apssid).c_str(), appassword);         
 
     for (int i=0;i<2;i++) {    //若連不上WIFI設定閃光燈慢速閃爍
@@ -251,7 +253,7 @@ void setup() {
   
   startCameraServer(); 
 
-  //設定閃光燈為低電位
+  //Set flash light to LOW
   pinMode(4, OUTPUT);
   digitalWrite(4, LOW); 
 }
@@ -407,7 +409,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       Serial.println("cmd= "+cmd+" ,P1= "+P1+" ,P2= "+P2+" ,P3= "+P3+" ,P4= "+P4+" ,P5= "+P5+" ,P6= "+P6+" ,P7= "+P7+" ,P8= "+P8+" ,P9= "+P9);
       Serial.println(""); 
 
-      //自訂指令區塊  http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
+      //Custom command block  http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
       if (cmd=="your cmd") {
         // You can do anything
         // Feedback="<font color=\"red\">Hello World</font>";   //可為一般文字或HTML語法
@@ -488,8 +490,8 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       if (Feedback=="") Feedback=Command;  //若沒有設定回傳資料就回傳Command值
     
       const char *resp = Feedback.c_str();
-      httpd_resp_set_type(req, "text/html");  //設定回傳資料格式
-      httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");  //允許跨網域讀取
+      httpd_resp_set_type(req, "text/html");  //Set response data format
+      httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");  //Allow cross-domain access
       return httpd_resp_send(req, resp, strlen(resp));
     } 
     else {
@@ -497,7 +499,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       sensor_t * s = esp_camera_sensor_get();
       int res = 0;
 
-      //官方指令區塊，也可在此自訂指令  http://192.168.xxx.xxx/control?var=xxx&val=xxx
+      //官方指令區塊, 也可在此自訂指令  http://192.168.xxx.xxx/control?var=xxx&val=xxx
       if(!strcmp(variable, "framesize")) {
         if(s->pixformat == PIXFORMAT_JPEG) 
           res = s->set_framesize(s, (framesize_t)val);
@@ -538,7 +540,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
         const char *resp = Feedback.c_str();
         httpd_resp_set_type(req, "text/html");
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-        return httpd_resp_send(req, resp, strlen(resp));  //回傳參數字串
+        return httpd_resp_send(req, resp, strlen(resp));  //Return parameter string
       }
       else {
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
@@ -1122,7 +1124,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(<!doctype html>
                       
           //可以在這區塊做姿態判定控制開關或繼電器
           if (leftShoulderTop>=0&&rightShoulderTop>=0&&rightWristLeft>=0&&rightWristTop>=0&&leftWristLeft>=0&&leftWristTop>=0&&noseLeft>=0&&noseTop) {
-            //當控制的姿勢是左右不對稱時，鏡像與非鏡像判別條件不同
+            //當控制的姿勢是左右不對稱時, 鏡像與非鏡像判別條件不同
             
             if (mirrorimage==1) {  //鏡像時
               if (rightWristLeft>noseLeft&&rightWristTop<noseTop&&(leftWristTop-leftShoulderTop)/(leftShoulderTop-noseTop)>=-0.5&&(leftWristTop-leftShoulderTop)/(leftShoulderTop-noseTop)<=1&&position_angle(rightWristLeft,rightWristTop,leftWristLeft,leftWristTop)<-20&&position_angle(rightWristLeft,rightWristTop,leftWristLeft,leftWristTop)>-60) {
@@ -1251,7 +1253,7 @@ void startCameraServer(){
   
   Serial.printf("Starting web server on port: '%d'\n", config.server_port);  //Server Port
   if (httpd_start(&camera_httpd, &config) == ESP_OK) {
-      //註冊自訂網址路徑對應執行的函式
+      //Register custom URL path handlers
       httpd_register_uri_handler(camera_httpd, &index_uri);
       httpd_register_uri_handler(camera_httpd, &cmd_uri);
       httpd_register_uri_handler(camera_httpd, &status_uri);
@@ -1266,7 +1268,7 @@ void startCameraServer(){
   }
 }
 
-//拆解命令字串置入變數
+//Decompose command string and put into variables
 void getCommand(char c)
 {
   if (c=='?') ReceiveState=1;

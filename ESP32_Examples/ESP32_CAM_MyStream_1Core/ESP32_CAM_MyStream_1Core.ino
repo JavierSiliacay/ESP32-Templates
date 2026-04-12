@@ -1,7 +1,9 @@
 /*
 ESP32-CAM My Stream for solving the problem about "Header fields are too long for server to interpret.
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2022-12-7 23:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 stream
 http://yourIP/?stream

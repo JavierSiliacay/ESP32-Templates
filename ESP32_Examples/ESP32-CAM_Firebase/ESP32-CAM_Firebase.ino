@@ -1,7 +1,9 @@
 /*
 ESP32-CAM Save a captured photo(Base64) to firebase. 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2019-8-16 23:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Arduino core for ESP32 version 1.0.4
 

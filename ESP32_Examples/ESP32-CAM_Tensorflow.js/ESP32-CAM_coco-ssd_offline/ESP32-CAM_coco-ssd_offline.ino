@@ -1,7 +1,9 @@
 /*
 ESP32-CAM Load js filse from SD Card
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-2-7 21:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 首頁
 http://APIP
@@ -11,7 +13,7 @@ http://STAIP
 http://APIP/?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 http://STAIP/?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 
-預設AP端IP： 192.168.4.1
+預設AP端IP:  192.168.4.1
 http://192.168.xxx.xxx?ip
 http://192.168.xxx.xxx?mac
 http://192.168.xxx.xxx?restart
@@ -23,9 +25,9 @@ http://192.168.xxx.xxx?getfile=/filename      //取得SD卡text/html檔
 http://192.168.xxx.xxx?getimage=/filename     //取得SD卡image/jpeg檔
 http://192.168.xxx.xxx?framesize=size     //size= UXGA|SXGA|XGA|SVGA|VGA|CIF|QVGA|HQVGA|QQVGA 改變影像解析度
 
-查詢Client端IP：
-查詢IP：http://192.168.4.1/?ip
-重設網路：http://192.168.4.1/?resetwifi=ssid;password
+查詢Client端IP: 
+查詢IP: http://192.168.4.1/?ip
+重設網路: http://192.168.4.1/?resetwifi=ssid;password
 */
 
 //輸入WIFI連線帳號密碼
@@ -39,10 +41,10 @@ const char* appassword = "12345678";    //AP端密碼至少要八個字元以上
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include "esp_camera.h"         //視訊
-#include "soc/soc.h"            //用於電源不穩不重開機
-#include "soc/rtc_cntl_reg.h"   //用於電源不穩不重開機
+#include "soc/soc.h"            //For power instability non-reset
+#include "soc/rtc_cntl_reg.h"   //For power instability non-reset
 #include "FS.h"                 //file system wrapper
-#include "SD_MMC.h"             //SD卡存取函式庫
+#include "SD_MMC.h"             //SD card access functions庫
 
 String Feedback="";   //回傳客戶端訊息
 //指令參數值
@@ -477,13 +479,13 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
 )rawliteral";
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
   
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  //Enable debug output
   Serial.println();
 
-  //視訊組態設定
+  //Video configuration settings
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -568,7 +570,7 @@ void setup() {
   //指定Client端靜態IP
   //WiFi.config(IPAddress(192, 168, 201, 100), IPAddress(192, 168, 201, 2), IPAddress(255, 255, 255, 0));
 
-  WiFi.begin(ssid, password);    //執行網路連線
+  WiFi.begin(ssid, password);    //Start network connection
 
   delay(1000);
   Serial.println("");
@@ -578,11 +580,11 @@ void setup() {
   long int StartTime=millis();
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
-      if ((StartTime+10000) < millis()) break;    //等待10秒連線
+      if ((StartTime+10000) < millis()) break;    //Wait 10 seconds for connection
   } 
 
-  if (WiFi.status() == WL_CONNECTED) {    //若連線成功
-    WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+  if (WiFi.status() == WL_CONNECTED) {    //If connection successful
+    WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //Set SSID to show client IP         
     Serial.println("");
     Serial.println("STAIP address: ");
     Serial.println(WiFi.localIP());  
@@ -819,7 +821,7 @@ void loop() {
   }
 }
 
-//拆解命令字串置入變數
+//Decompose command string and put into variables
 void getCommand(char c)
 {
   if (c=='?') ReceiveState=1;

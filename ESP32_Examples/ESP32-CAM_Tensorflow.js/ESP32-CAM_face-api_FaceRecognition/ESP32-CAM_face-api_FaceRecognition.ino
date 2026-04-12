@@ -2,83 +2,85 @@
 ESP32-CAM Face recognition (face-api.js)
 https://github.com/justadudewhohacks/face-api.js/
 
-因為人臉辨識會不斷地消耗記憶體，所以設計切換辨識開關僅執行一次辨識即復原。
+// Because face recognition continuously consumes memory, the recognition switch is designed to perform identification only once and then reset.
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-7-4 15:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 AP IP: 192.168.4.1
-http://192.168.xxx.xxx             //網頁首頁管理介面
-http://192.168.xxx.xxx:81/stream   //取得串流影像        網頁語法 <img src="http://192.168.xxx.xxx:81/stream">
-http://192.168.xxx.xxx/capture     //取得影像           網頁語法 <img src="http://192.168.xxx.xxx/capture">
-http://192.168.xxx.xxx/status      //取得視訊參數值
+http://192.168.xxx.xxx             // Web homepage management interface
+http://192.168.xxx.xxx:81/stream   // Get streaming video    Web syntax: <img src="http://192.168.xxx.xxx:81/stream">
+http://192.168.xxx.xxx/capture     // Get image             Web syntax: <img src="http://192.168.xxx.xxx/capture">
+http://192.168.xxx.xxx/status      // Get video parameter values
 
 
 自訂指令格式 http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 
-http://192.168.xxx.xxx/control?ip                      //取得APIP, STAIP
-http://192.168.xxx.xxx/control?mac                     //取得MAC位址
-http://192.168.xxx.xxx/control?digitalwrite=pin;value  //數位輸出
-http://192.168.xxx.xxx/control?analogwrite=pin;value   //類比輸出
-http://192.168.xxx.xxx/control?digitalread=pin         //數位讀取
-http://192.168.xxx.xxx/control?analogread=pin          //類比讀取
-http://192.168.xxx.xxx/control?touchread=pin           //觸碰讀取
-http://192.168.xxx.xxx/control?restart                 //重啟電源
-http://192.168.xxx.xxx/control?flash=value             //閃光燈 value= 0~255
-http://192.168.xxx.xxx/control?servo=pin;value         //伺服馬達 value= 0~180
-http://192.168.xxx.xxx/control?relay=pin;value         //繼電器 value = 0, 1
+http://192.168.xxx.xxx/control?ip                      // Get APIP, STAIP
+http://192.168.xxx.xxx/control?mac                     // Get MAC address
+http://192.168.xxx.xxx/control?digitalwrite=pin;value  // Digital output
+http://192.168.xxx.xxx/control?analogwrite=pin;value   // Analog output
+http://192.168.xxx.xxx/control?digitalread=pin         // Digital reading
+http://192.168.xxx.xxx/control?analogread=pin          // Analog reading
+http://192.168.xxx.xxx/control?touchread=pin           // Touch reading
+http://192.168.xxx.xxx/control?restart                 // Reboot power
+http://192.168.xxx.xxx/control?flash=value             // Flash value = 0~255
+http://192.168.xxx.xxx/control?servo=pin;value         // Servo motor value = 0~180
+http://192.168.xxx.xxx/control?relay=pin;value         // Relay value = 0, 1
 http://192.168.xxx.xxx/control?uart=value            //UART
 
 設定視訊參數(官方指令格式)  http://192.168.xxx.xxx/control?var=*****&val=*****
 
-http://192.168.xxx.xxx/control?var=flash&val=value          //閃光燈 value= 0~255
-http://192.168.xxx.xxx/control?var=framesize&val=value      //解析度 value = 10->UXGA(1600x1200), 9->SXGA(1280x1024), 8->XGA(1024x768) ,7->SVGA(800x600), 6->VGA(640x480), 5 selected=selected->CIF(400x296), 4->QVGA(320x240), 3->HQVGA(240x176), 0->QQVGA(160x120), 11->QXGA(2048x1564 for OV3660)
-http://192.168.xxx.xxx/control?var=quality&val=value        //畫質 value = 10 ~ 63
-http://192.168.xxx.xxx/control?var=brightness&val=value     //亮度 value = -2 ~ 2
-http://192.168.xxx.xxx/control?var=contrast&val=value       //對比 value = -2 ~ 2
-http://192.168.xxx.xxx/control?var=saturation&val=value     //飽和度 value = -2 ~ 2 
-http://192.168.xxx.xxx/control?var=gainceiling&val=value    //自動增益上限(開啟時) value = 0 ~ 6
-http://192.168.xxx.xxx/control?var=colorbar&val=value       //顏色條畫面 value = 0 or 1
-http://192.168.xxx.xxx/control?var=awb&val=value            //白平衡 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=agc&val=value            //自動增益控制 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=aec&val=value            //自動曝光感測器 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=hmirror&val=value        //水平鏡像 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=vflip&val=value          //垂直翻轉 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=awb_gain&val=value       //自動白平衡增益 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=agc_gain&val=value       //自動增益(關閉時) value = 0 ~ 30
-http://192.168.xxx.xxx/control?var=aec_value&val=value      //曝光值 value = 0 ~ 1200
-http://192.168.xxx.xxx/control?var=aec2&val=value           //自動曝光控制 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=dcw&val=value            //使用自訂影像尺寸 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=bpc&val=value            //黑色像素校正 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=wpc&val=value            //白色像素校正 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=raw_gma&val=value        //原始伽瑪 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=lenc&val=value           //鏡頭校正 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=special_effect&val=value //特效 value = 0 ~ 6
-http://192.168.xxx.xxx/control?var=wb_mode&val=value        //白平衡模式 value = 0 ~ 4
-http://192.168.xxx.xxx/control?var=ae_level&val=value       //自動曝光層級 value = -2 ~ 2 
+http://192.168.xxx.xxx/control?var=flash&val=value          // Flash value = 0~255
+http://192.168.xxx.xxx/control?var=framesize&val=value      // Resolution value = 10->UXGA(1600x1200), 9->SXGA(1280x1024), 8->XGA(1024x768) ,7->SVGA(800x600), 6->VGA(640x480), 5 selected=selected->CIF(400x296), 4->QVGA(320x240), 3->HQVGA(240x176), 0->QQVGA(160x120), 11->QXGA(2048x1564 for OV3660)
+http://192.168.xxx.xxx/control?var=quality&val=value        // Quality value = 10 ~ 63
+http://192.168.xxx.xxx/control?var=brightness&val=value     // Brightness value = -2 ~ 2
+http://192.168.xxx.xxx/control?var=contrast&val=value       // Contrast value = -2 ~ 2
+http://192.168.xxx.xxx/control?var=saturation&val=value     // Saturation value = -2 ~ 2 
+http://192.168.xxx.xxx/control?var=gainceiling&val=value    // Auto gain ceiling (when enabled) value = 0 ~ 6
+http://192.168.xxx.xxx/control?var=colorbar&val=value       // Color bar screen value = 0 or 1
+http://192.168.xxx.xxx/control?var=awb&val=value            // White balance value = 0 or 1 
+http://192.168.xxx.xxx/control?var=agc&val=value            // Auto gain control value = 0 or 1 
+http://192.168.xxx.xxx/control?var=aec&val=value            // Auto exposure sensor value = 0 or 1 
+http://192.168.xxx.xxx/control?var=hmirror&val=value        // Horizontal mirror value = 0 or 1 
+http://192.168.xxx.xxx/control?var=vflip&val=value          // Vertical flip value = 0 or 1 
+http://192.168.xxx.xxx/control?var=awb_gain&val=value       // Auto white balance gain value = 0 or 1 
+http://192.168.xxx.xxx/control?var=agc_gain&val=value       // Auto gain (when disabled) value = 0 ~ 30
+http://192.168.xxx.xxx/control?var=aec_value&val=value      // Exposure value value = 0 ~ 1200
+http://192.168.xxx.xxx/control?var=aec2&val=value           // Auto exposure control value = 0 or 1 
+http://192.168.xxx.xxx/control?var=dcw&val=value            // Use custom image size value = 0 or 1 
+http://192.168.xxx.xxx/control?var=bpc&val=value            // Black pixel correction value = 0 or 1 
+http://192.168.xxx.xxx/control?var=wpc&val=value            // White pixel correction value = 0 or 1 
+http://192.168.xxx.xxx/control?var=raw_gma&val=value        // Raw gamma value = 0 or 1 
+http://192.168.xxx.xxx/control?var=lenc&val=value           // Lens correction value = 0 or 1 
+http://192.168.xxx.xxx/control?var=special_effect&val=value // Special effect value = 0 ~ 6
+http://192.168.xxx.xxx/control?var=wb_mode&val=value        // White balance mode value = 0 ~ 4
+http://192.168.xxx.xxx/control?var=ae_level&val=value       // Auto exposure level value = -2 ~ 2 
 
-視訊參數說明
+Video parameter description
 https://heyrick.eu/blog/index.php?diary=20210418
 */
 
-//輸入WIFI連線帳號密碼
+// Enter WiFi SSID and password
 const char* ssid = "teacher";
 const char* password = "87654321";
 
-//輸入AP端連線帳號密碼  http://192.168.4.1
+// Enter AP mode connection account and password http://192.168.4.1
 const char* apssid = "esp32-cam";
-const char* appassword = "12345678";         //AP密碼至少要8個字元以上 
+const char* appassword = "12345678";         // AP password must be at least 8 characters
 
 #include <WiFi.h>
-#include "soc/soc.h"             //用於電源不穩不重開機 
-#include "soc/rtc_cntl_reg.h"    //用於電源不穩不重開機 
+#include "soc/soc.h"             // Used for brownout protection (prevent reboot on unstable power)
+#include "soc/rtc_cntl_reg.h"    // Used for brownout protection (prevent reboot on unstable power)
 
-//官方函式庫
-#include "esp_camera.h"          //視訊函式
-#include "esp_http_server.h"     //HTTP Server函式
-#include "img_converters.h"      //影像格式轉換函式
+// Official libraries
+#include "esp_camera.h"          // Video functions
+#include "esp_http_server.h"     // HTTP Server functions
+#include "img_converters.h"      // Image format conversion functions
 
-//ESP32-CAM 安信可模組腳位設定
+// ESP32-CAM AI-Thinker module pin configuration
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM      0
@@ -101,7 +103,7 @@ typedef struct {
         size_t len;
 } jpg_chunking_t;
 
-//影像傳輸網頁標頭設定
+// Image transmission web header settings
 #define PART_BOUNDARY "123456789000000000000987654321"
 static const char* _STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
 static const char* _STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
@@ -112,9 +114,9 @@ httpd_handle_t camera_httpd = NULL;
 
 void startCameraServer();
 
-String Feedback="";   //自訂指令回傳客戶端訊息
+String Feedback="";   // Custom command response message to client
 
-//自訂指令參數值
+// Custom command parameter values
 String Command="";
 String cmd="";
 String P1="";
@@ -127,7 +129,7 @@ String P7="";
 String P8="";
 String P9="";
 
-//自訂指令拆解狀態值
+// Custom command parsing state values
 byte ReceiveState=0;
 byte cmdState=1;
 byte strState=1;
@@ -136,13 +138,13 @@ byte equalstate=0;
 byte semicolonstate=0;
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  // Disable brownout detection (prevent reboot on power drops)
     
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  // Enable diagnostic output
   Serial.println();
 
-  //視訊組態設定  https://github.com/espressif/esp32-camera/blob/master/driver/include/esp_camera.h
+  // Video configuration settings  https://github.com/espressif/esp32-camera/blob/master/driver/include/esp_camera.h
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -172,7 +174,7 @@ void setup() {
   //   
   // if PSRAM IC present, init with UXGA resolution and higher JPEG quality
   //                      for larger pre-allocated frame buffer.
-  if(psramFound()){  //是否有PSRAM(Psuedo SRAM)記憶體IC
+  if(psramFound()){  // Check if PSRAM (Pseudo SRAM) memory IC is present
     config.frame_size = FRAMESIZE_UXGA;
     config.jpeg_quality = 10;
     config.fb_count = 2;
@@ -182,14 +184,14 @@ void setup() {
     config.fb_count = 1;
   }
 
-  //視訊初始化
+  // Video initialization
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed with error 0x%x", err);
     ESP.restart();
   }
 
-  //可自訂視訊框架預設大小(解析度大小)
+  // Custom video frame size (resolution)
   sensor_t * s = esp_camera_sensor_get();
   // initial sensors are flipped vertically and colors are a bit saturated
   if (s->id.PID == OV3660_PID) {
@@ -198,22 +200,22 @@ void setup() {
     s->set_saturation(s, -2); // lower the saturation
   }
   // drop down frame size for higher initial frame rate
-  s->set_framesize(s, FRAMESIZE_QVGA);    //解析度 UXGA(1600x1200), SXGA(1280x1024), XGA(1024x768), SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
+  s->set_framesize(s, FRAMESIZE_QVGA);    // Resolution: UXGA(1600x1200), SXGA(1280x1024), XGA(1024x768), SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
 
-  //s->set_vflip(s, 1);  //垂直翻轉
-  //s->set_hmirror(s, 1);  //水平鏡像
+  //s->set_vflip(s, 1);  //Vertical flip
+  //s->set_hmirror(s, 1);  //Horizontal mirror
   
-  //閃光燈(GPIO4)
+  // Flashlight (GPIO4)
   ledcAttachPin(4, 4);  
   ledcSetup(4, 5000, 8);
   
-  WiFi.mode(WIFI_AP_STA);  //其他模式 WiFi.mode(WIFI_AP); WiFi.mode(WIFI_STA);
+  WiFi.mode(WIFI_AP_STA);  // Other modes: WiFi.mode(WIFI_AP); WiFi.mode(WIFI_STA);
 
-  //指定Client端靜態IP
+  // Specify Client endpoint static IP
   //WiFi.config(IPAddress(192, 168, 201, 100), IPAddress(192, 168, 201, 2), IPAddress(255, 255, 255, 0));
 
   for (int i=0;i<2;i++) {
-    WiFi.begin(ssid, password);    //執行網路連線
+    WiFi.begin(ssid, password);    // Execute WiFi connection
   
     delay(1000);
     Serial.println("");
@@ -223,17 +225,17 @@ void setup() {
     long int StartTime=millis();
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
-        if ((StartTime+5000) < millis()) break;    //等待10秒連線
+        if ((StartTime+5000) < millis()) break;    // Wait for connection (10 second timeout check)
     } 
   
-    if (WiFi.status() == WL_CONNECTED) {    //若連線成功
-      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+    if (WiFi.status() == WL_CONNECTED) {    // If connection successful
+      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   // Set SSID to display client IP         
       Serial.println("");
       Serial.println("STAIP address: ");
       Serial.println(WiFi.localIP());
       Serial.println("");
   
-      for (int i=0;i<5;i++) {   //若連上WIFI設定閃光燈快速閃爍
+      for (int i=0;i<5;i++) {   // If connected to WiFi, set flash to blink rapidly
         ledcWrite(4,10);
         delay(200);
         ledcWrite(4,0);
@@ -243,10 +245,10 @@ void setup() {
     }
   } 
 
-  if (WiFi.status() != WL_CONNECTED) {    //若連線失敗
+  if (WiFi.status() != WL_CONNECTED) {    // If connection fails
     WiFi.softAP((WiFi.softAPIP().toString()+"_"+(String)apssid).c_str(), appassword);         
 
-    for (int i=0;i<2;i++) {    //若連不上WIFI設定閃光燈慢速閃爍
+    for (int i=0;i<2;i++) {    // If unable to connect to WiFi, set flash to blink slowly
       ledcWrite(4,10);
       delay(1000);
       ledcWrite(4,0);
@@ -254,7 +256,7 @@ void setup() {
     }
   } 
   
-  //指定AP端IP
+  // Specify AP endpoint IP
   //WiFi.softAPConfig(IPAddress(192, 168, 4, 1), IPAddress(192, 168, 4, 1), IPAddress(255, 255, 255, 0)); 
   Serial.println("");
   Serial.println("APIP address: ");
@@ -263,7 +265,7 @@ void setup() {
   
   startCameraServer(); 
 
-  //設定閃光燈為低電位
+  // Set flashlight to LOW
   pinMode(4, OUTPUT);
   digitalWrite(4, LOW); 
 }
@@ -285,7 +287,7 @@ static size_t jpg_encode_stream(void * arg, size_t index, const void* data, size
     return len;
 }
 
-//影像截圖
+// Image capture
 static esp_err_t capture_handler(httpd_req_t *req){
     camera_fb_t * fb = NULL;
     esp_err_t res = ESP_OK;
@@ -315,7 +317,7 @@ static esp_err_t capture_handler(httpd_req_t *req){
     return res;
 }
 
-//影像串流
+// Image streaming
 static esp_err_t stream_handler(httpd_req_t *req){
     camera_fb_t * fb = NULL;
     esp_err_t res = ESP_OK;
@@ -376,12 +378,12 @@ static esp_err_t stream_handler(httpd_req_t *req){
     return res;
 }
 
-//指令參數控制
+// Command parameter control
 static esp_err_t cmd_handler(httpd_req_t *req){
-    char*  buf;    //存取網址後帶的參數字串
+    char*  buf;    // Buffer for URL query parameter string
     size_t buf_len;
-    char variable[128] = {0,};  //存取參數var值
-    char value[128] = {0,};     //存取參數val值
+    char variable[128] = {0,};  // Storage for parameter 'var' value
+    char value[128] = {0,};     // Storage for parameter 'val' value
     String myCmd = "";
 
     buf_len = httpd_req_get_url_query_len(req) + 1;
@@ -397,7 +399,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
             httpd_query_key_value(buf, "val", value, sizeof(value)) == ESP_OK) {
           } 
           else {
-            myCmd = String(buf);   //如果非官方格式不含var, val，則為自訂指令格式
+            myCmd = String(buf);   // If not the official format (no 'var' or 'val'), treat as custom command format
           }
         }
         free(buf);
@@ -409,9 +411,9 @@ static esp_err_t cmd_handler(httpd_req_t *req){
     Feedback="";Command="";cmd="";P1="";P2="";P3="";P4="";P5="";P6="";P7="";P8="";P9="";
     ReceiveState=0,cmdState=1,strState=1,questionstate=0,equalstate=0,semicolonstate=0;     
     if (myCmd.length()>0) {
-      myCmd = "?"+myCmd;  //網址後帶的參數字串轉換成自訂指令格式
+      myCmd = "?"+myCmd;  // Convert URL parameter string to custom command format
       for (int i=0;i<myCmd.length();i++) {
-        getCommand(char(myCmd.charAt(i)));  //拆解自訂指令參數字串
+        getCommand(char(myCmd.charAt(i)));  // Parse custom command parameter string
       }
     }
 
@@ -421,31 +423,31 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       Serial.println("cmd= "+cmd+" ,P1= "+P1+" ,P2= "+P2+" ,P3= "+P3+" ,P4= "+P4+" ,P5= "+P5+" ,P6= "+P6+" ,P7= "+P7+" ,P8= "+P8+" ,P9= "+P9);
       Serial.println(""); 
 
-      //自訂指令區塊  http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
+      // Custom command block: http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
       if (cmd=="your cmd") {
         // You can do anything
-        // Feedback="<font color=\"red\">Hello World</font>";   //可為一般文字或HTML語法
+        // Feedback="<font color=\"red\">Hello World</font>";   // Can be plain text or HTML syntax
       }
-      else if (cmd=="ip") {  //查詢APIP, STAIP
+      else if (cmd=="ip") {  // Query APIP, STAIP
         Feedback="AP IP: "+WiFi.softAPIP().toString();    
         Feedback+="<br>";
         Feedback+="STA IP: "+WiFi.localIP().toString();
       }  
-      else if (cmd=="mac") {  //查詢MAC位址
+      else if (cmd=="mac") {  // Query MAC address
         Feedback="STA MAC: "+WiFi.macAddress();
       }  
-      else if (cmd=="restart") {  //重設WIFI連線
+      else if (cmd=="restart") {  // Reset WiFi connection
         ESP.restart();
       }  
-      else if (cmd=="digitalwrite") {  //數位輸出
+      else if (cmd=="digitalwrite") {  // Digital output
         ledcDetachPin(P1.toInt());
         pinMode(P1.toInt(), OUTPUT);
         digitalWrite(P1.toInt(), P2.toInt());
       }   
-      else if (cmd=="digitalread") {  //數位輸入
+      else if (cmd=="digitalread") {  // Digital input
         Feedback=String(digitalRead(P1.toInt()));
       }
-      else if (cmd=="analogwrite") {  //類比輸出
+      else if (cmd=="analogwrite") {  // Analog output
         if (P1=="4") {
           ledcAttachPin(4, 4);  
           ledcSetup(4, 5000, 8);
@@ -457,22 +459,22 @@ static esp_err_t cmd_handler(httpd_req_t *req){
           ledcWrite(9,P2.toInt());
         }
       }       
-      else if (cmd=="analogread") {  //類比讀取
+      else if (cmd=="analogread") {  // Analog reading
         Feedback=String(analogRead(P1.toInt()));
       }
-      else if (cmd=="touchread") {  //觸碰讀取
+      else if (cmd=="touchread") {  // Touch reading
         Feedback=String(touchRead(P1.toInt()));
       }
-      else if (cmd=="restart") {  //重啟電源
+      else if (cmd=="restart") {  // Restart power
         ESP.restart();
       }         
-      else if (cmd=="flash") {  //閃光燈
+      else if (cmd=="flash") {  // Flashlight
         ledcAttachPin(4, 4);  
         ledcSetup(4, 5000, 8);   
         int val = P1.toInt();
         ledcWrite(4,val);  
       }
-      else if(cmd=="servo") {  //伺服馬達
+      else if(cmd=="servo") {  // Servo motor
         ledcAttachPin(P1.toInt(), 3);
         ledcSetup(3, 50, 16);
          
@@ -483,7 +485,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
           val = 1638; 
         ledcWrite(3, val);
       }
-      else if (cmd=="relay") {  //繼電器
+      else if (cmd=="relay") {  // Relay
         pinMode(P1.toInt(), OUTPUT);  
         digitalWrite(P1.toInt(), P2.toInt());  
       }
@@ -494,11 +496,11 @@ static esp_err_t cmd_handler(httpd_req_t *req){
         Feedback="Command is not defined";
       }
 
-      if (Feedback=="") Feedback=Command;  //若沒有設定回傳資料就回傳Command值
+      if (Feedback=="") Feedback=Command;  // If no response data is set, return the Command value
     
       const char *resp = Feedback.c_str();
-      httpd_resp_set_type(req, "text/html");  //設定回傳資料格式
-      httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");  //允許跨網域讀取
+      httpd_resp_set_type(req, "text/html");  // Set response data format
+      httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");  // Enable cross-domain reading (CORS)
       return httpd_resp_send(req, resp, strlen(resp));
     } 
     else {
@@ -507,32 +509,32 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       sensor_t * s = esp_camera_sensor_get();
       int res = 0;
 
-      if(!strcmp(variable, "framesize")) {  //解析度
+      if(!strcmp(variable, "framesize")) {  // Resolution
           if(s->pixformat == PIXFORMAT_JPEG) res = s->set_framesize(s, (framesize_t)val);
       }
-      else if(!strcmp(variable, "quality")) res = s->set_quality(s, val);  //畫質
-      else if(!strcmp(variable, "contrast")) res = s->set_contrast(s, val);  //對比
-      else if(!strcmp(variable, "brightness")) res = s->set_brightness(s, val);  //亮度
-      else if(!strcmp(variable, "saturation")) res = s->set_saturation(s, val);  //飽和度
-      else if(!strcmp(variable, "gainceiling")) res = s->set_gainceiling(s, (gainceiling_t)val);  //自動增益上限(開啟時)
-      else if(!strcmp(variable, "colorbar")) res = s->set_colorbar(s, val);  //顏色條畫面
-      else if(!strcmp(variable, "awb")) res = s->set_whitebal(s, val);  //白平衡
-      else if(!strcmp(variable, "agc")) res = s->set_gain_ctrl(s, val);  //自動增益控制
-      else if(!strcmp(variable, "aec")) res = s->set_exposure_ctrl(s, val);  //自動曝光感測器
-      else if(!strcmp(variable, "hmirror")) res = s->set_hmirror(s, val);  //水平鏡像
-      else if(!strcmp(variable, "vflip")) res = s->set_vflip(s, val);  //垂直翻轉
-      else if(!strcmp(variable, "awb_gain")) res = s->set_awb_gain(s, val);  //自動白平衡增益
-      else if(!strcmp(variable, "agc_gain")) res = s->set_agc_gain(s, val);  //自動增益(關閉時)
-      else if(!strcmp(variable, "aec_value")) res = s->set_aec_value(s, val);  //曝光值
-      else if(!strcmp(variable, "aec2")) res = s->set_aec2(s, val);  //自動曝光控制
-      else if(!strcmp(variable, "dcw")) res = s->set_dcw(s, val);  //使用自訂影像尺寸
-      else if(!strcmp(variable, "bpc")) res = s->set_bpc(s, val);  //黑色像素校正
-      else if(!strcmp(variable, "wpc")) res = s->set_wpc(s, val);  //白色像素校正
-      else if(!strcmp(variable, "raw_gma")) res = s->set_raw_gma(s, val);  //原始伽瑪
-      else if(!strcmp(variable, "lenc")) res = s->set_lenc(s, val);  //鏡頭校正
-      else if(!strcmp(variable, "special_effect")) res = s->set_special_effect(s, val);  //特效
-      else if(!strcmp(variable, "wb_mode")) res = s->set_wb_mode(s, val);  //白平衡模式
-      else if(!strcmp(variable, "ae_level")) res = s->set_ae_level(s, val);  //自動曝光層級
+      else if(!strcmp(variable, "quality")) res = s->set_quality(s, val);  // Quality
+      else if(!strcmp(variable, "contrast")) res = s->set_contrast(s, val);  // Contrast
+      else if(!strcmp(variable, "brightness")) res = s->set_brightness(s, val);  // Brightness
+      else if(!strcmp(variable, "saturation")) res = s->set_saturation(s, val);  // Saturation
+      else if(!strcmp(variable, "gainceiling")) res = s->set_gainceiling(s, (gainceiling_t)val);  // Auto gain ceiling (when enabled)
+      else if(!strcmp(variable, "colorbar")) res = s->set_colorbar(s, val);  // Color bar screen
+      else if(!strcmp(variable, "awb")) res = s->set_whitebal(s, val);  // White balance
+      else if(!strcmp(variable, "agc")) res = s->set_gain_ctrl(s, val);  // Auto gain control
+      else if(!strcmp(variable, "aec")) res = s->set_exposure_ctrl(s, val);  // Auto exposure sensor
+      else if(!strcmp(variable, "hmirror")) res = s->set_hmirror(s, val);  // Horizontal mirror
+      else if(!strcmp(variable, "vflip")) res = s->set_vflip(s, val);  // Vertical flip
+      else if(!strcmp(variable, "awb_gain")) res = s->set_awb_gain(s, val);  // Auto white balance gain
+      else if(!strcmp(variable, "agc_gain")) res = s->set_agc_gain(s, val);  // Auto gain (when disabled)
+      else if(!strcmp(variable, "aec_value")) res = s->set_aec_value(s, val);  // Exposure value
+      else if(!strcmp(variable, "aec2")) res = s->set_aec2(s, val);  // Auto exposure control
+      else if(!strcmp(variable, "dcw")) res = s->set_dcw(s, val);  // Use custom image size
+      else if(!strcmp(variable, "bpc")) res = s->set_bpc(s, val);  // Black pixel correction
+      else if(!strcmp(variable, "wpc")) res = s->set_wpc(s, val);  // White pixel correction
+      else if(!strcmp(variable, "raw_gma")) res = s->set_raw_gma(s, val);  // Raw gamma
+      else if(!strcmp(variable, "lenc")) res = s->set_lenc(s, val);  // Lens correction
+      else if(!strcmp(variable, "special_effect")) res = s->set_special_effect(s, val);  // Special effect
+      else if(!strcmp(variable, "wb_mode")) res = s->set_wb_mode(s, val);  // White balance mode
+      else if(!strcmp(variable, "ae_level")) res = s->set_ae_level(s, val);  // Auto exposure level
   
       if(res){
           return httpd_resp_send_500(req);
@@ -543,7 +545,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
         const char *resp = Feedback.c_str();
         httpd_resp_set_type(req, "text/html");
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-        return httpd_resp_send(req, resp, strlen(resp));  //回傳參數字串
+        return httpd_resp_send(req, resp, strlen(resp));  // Return parameter string
       }
       else {
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
@@ -552,7 +554,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
     }
 }
 
-//設定選單初始值取回json格式
+// Retrieve initial menu values in JSON format
 static esp_err_t status_handler(httpd_req_t *req){
     static char json_response[1024];
 
@@ -954,7 +956,7 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
         <script src='https:\/\/fustyles.github.io/webduino/TensorFlow/Face-api/face-api.min.js'></script>        
     </head>
     <body>
-    ESP32-CAM IP：<input type="text" id="ip" size="20" value="192.168.">&nbsp;&nbsp;<input type="button" value="Set" onclick="start();">
+    ESP32-CAM IP: <input type="text" id="ip" size="20" value="192.168.">&nbsp;&nbsp;<input type="button" value="Set" onclick="start();">
     <figure>
       <div id="stream-container" class="image-container hidden">
         <div class="close" id="close-stream">×</div>
@@ -1078,11 +1080,11 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
                 </div>
             </div>
         </section>
-        Result：<input type="checkbox" id="chkResult" checked>
+        Result: <input type="checkbox" id="chkResult" checked>
         <div id="message" style="color:red">Please wait for loading model.<div>
                 
         <script>
-        //法蘭斯影像辨識
+        // France Image Recognition
         const aiView = document.getElementById('stream')
         const aiStill = document.getElementById('get-still')
         const canvas = document.getElementById('canvas')     
@@ -1094,9 +1096,9 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
         var res = "";
 
         //Model: https://github.com/fustyles/webduino/tree/master/TensorFlow/Face-api
-        const faceImagesPath = 'https://fustyles.github.io/webduino/TensorFlow/Face-api/facelist/';     //人名命名的資料夾路徑
-        const faceLabels = ['France', 'ChilingLin'];     //人名命名的資料夾列表
-        faceImagesCount = 2 ;                            //每個人名命名的資料夾內的照片數，以流水編號命名JPG圖檔 1.jpg, 2.jpg...
+        const faceImagesPath = 'https://fustyles.github.io/webduino/TensorFlow/Face-api/facelist/';     // Path to folders named by person
+        const faceLabels = ['France', 'ChilingLin'];     // List of folder names (people)
+        faceImagesCount = 2 ;                            // Number of photos in each folder; files named with serial numbers: 1.jpg, 2.jpg...
         
         const modelPath = 'https://fustyles.github.io/webduino/TensorFlow/Face-api/';
         let displaySize = { width:320, height: 240 }
@@ -1127,7 +1129,7 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
           if (uart.checked) {
             let displaySize = { width:canvas.width, height: canvas.height }
       
-            faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, Number(distancelimit.value))  //距離上限，若超過此值則顯示unknow，否則顯示人名
+            faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, Number(distancelimit.value))  // Distance limit; if exceeded, show 'unknown', else show the person's name
             
             const detections = await faceapi.detectAllFaces(canvas).withFaceLandmarks().withFaceDescriptors();
             const resizedDetections = faceapi.resizeResults(detections, displaySize);
@@ -1142,7 +1144,7 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
             res = "";
             results.forEach((result, i) => {
                 if (uart.checked) {
-                  //當辨識出人臉時將辨識人名回傳
+                  // When a face is recognized, return the person's name via UART/HTTP
                   var query = document.location.origin+'/control?uart='+result.label;
                   fetch(query)
                     .then(response => {
@@ -1157,7 +1159,7 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
                 drawBox.draw(canvas);
               })
               
-              uart.checked = false;  //因為每辨識一次就吃一點記憶體，所以辨識完就暫停辨識。
+              uart.checked = false;  // Recognition consumes memory with each run, so identification is paused after completion.
               if (chkResult.checked) message.innerHTML = res;            
           }
           aiStill.click();
@@ -1186,7 +1188,7 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
           } 
         }
         
-        //官方式函式
+        // Official Functions
         function start() {
           var baseHost = 'http://'+document.getElementById("ip").value;  //var baseHost = document.location.origin
           var streamUrl = baseHost + ':81';
@@ -1245,15 +1247,15 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
                 return
             }
         
-            if (el.id =="flash") {  //新增flash自訂指令
+            if (el.id =="flash") {  // Add custom 'flash' command
               var query = baseHost+"/control?flash=" + String(value);
-            } else if (el.id =="servo") {  //新增servo自訂指令
+            } else if (el.id =="servo") {  // Add custom 'servo' command
               var query = baseHost+"/control?servo=" + pinServo.value + ";" + String(value);
-            } else if (el.id =="relay") {  //新增繼電器自訂指令
+            } else if (el.id =="relay") {  // Add custom 'relay' command
               var query = baseHost+"/control?relay=" + pinRelay.value + ";" + Number(relay.checked);
-            } else if (el.id =="uart") {  //新增uart自訂指令
+            } else if (el.id =="uart") {  // Add custom 'uart' command
               return;
-            } else if (el.id =="distancelimit") {  //新增distancelimit自訂指令
+            } else if (el.id =="distancelimit") {  // Add custom 'distancelimit' command
               return;                                          
             } else {
               var query = `${baseHost}/control?var=${el.id}&val=${value}`
@@ -1279,14 +1281,14 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
           const streamButton = document.getElementById('toggle-stream')
           const enrollButton = document.getElementById('face_enroll')
           const closeButton = document.getElementById('close-stream')
-          const stopButton = document.getElementById('stop-still')            //新增stopButton變數
-          const restartButton = document.getElementById('restart')            //新增restart變數
-          const flash = document.getElementById('flash')                      //新增flash變數
-          const servo = document.getElementById('servo')                      //新增servo變數
-          const pinServo = document.getElementById('pinServo');               //新增servo pin變數
-          const relay = document.getElementById('relay')                      //新增relay變數
-          const pinRelay = document.getElementById('pinRelay');               //新增relay pin變數          
-          const uart = document.getElementById('uart')                        //新增uart變數
+          const stopButton = document.getElementById('stop-still')            // Add stopButton variable
+          const restartButton = document.getElementById('restart')            // Add restart variable
+          const flash = document.getElementById('flash')                      // Add flash variable
+          const servo = document.getElementById('servo')                      // Add servo variable
+          const pinServo = document.getElementById('pinServo');               // Add servo pin variable
+          const relay = document.getElementById('relay')                      // Add relay variable
+          const pinRelay = document.getElementById('pinRelay');               // Add relay pin variable          
+          const uart = document.getElementById('uart')                        // Add uart variable
           
           const stopStream = () => {
             window.stop();
@@ -1320,7 +1322,7 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
             }
           }
           
-          //新增重啟電源按鈕點選事件 (自訂指令格式：http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9)
+          // Add click event for restart power button (Custom command format: http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9)
           restartButton.onclick = () => {
             fetch(baseHost+"/control?restart");
           }
@@ -1355,14 +1357,14 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
             document
             .querySelectorAll('.default-action')
             .forEach(el => {
-              if (el.id=="flash") {  //新增flash設定預設值0
+              if (el.id=="flash") {  // Set default value 0 for flash
                 flash.value=0;
                 var query = baseHost+"/control?flash=0";
                 fetch(query)
                   .then(response => {
                     console.log(`request to ${query} finished, status: ${response.status}`)
                   })
-              } else if (el.id=="servo") {  //新增servo設定預設值90度
+              } else if (el.id=="servo") {  // Set default value 90 degrees for servo
                 servo.value=90;
                 /*
                 var query = baseHost+"/control?servo=" + pinServo.value + ";90";
@@ -1371,7 +1373,7 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
                     console.log(`request to ${query} finished, status: ${response.status}`)
                   })
                 */
-              } else if (el.id=="relay") {  //新增relay設定預設值0
+              } else if (el.id=="relay") {  // Set default value 0 for relay
                 relay.checked = false;
                 /*
                 var query = baseHost+"/control?relay=" + pinRelay.value + ";0";
@@ -1380,9 +1382,9 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
                     console.log(`request to ${query} finished, status: ${response.status}`)
                   })
                 */
-              } else if (el.id=="uart") {  //新增uart設定預設值0
+              } else if (el.id=="uart") {  // Set default value 0 for uart (identification disabled)
                 uart.checked = false;
-              } else if (el.id=="distancelimit") {  //新增distance limit設定預設值0.4
+              } else if (el.id=="distancelimit") {  // Set default value 0.4 for distance limit
                 distancelimit.value = 0.4;                                  
               } else {    
                 updateValue(el, state[el.id], false)
@@ -1391,7 +1393,7 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
           })
         }
         
-        //  網址/?192.168.1.38  可自動帶入?後參數IP值
+        // URL/?192.168.1.38 - Automatically use the IP value from the parameter after ?
         var href=location.href;
         if (href.indexOf("?")!=-1) {
           ip.value = location.search.split("?")[1].replace(/http:\/\//g,"");
@@ -1407,7 +1409,7 @@ static const char PROGMEM index_ov2640_html_gz[] = R"rawliteral(
 </html>
 )rawliteral";
 
-//網頁首頁處理程序  http://192.168.xxx.xxx
+// Web home page processing program http://192.168.xxx.xxx
 static esp_err_t index_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "text/html");
     httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
@@ -1420,12 +1422,12 @@ static esp_err_t index_handler(httpd_req_t *req){
     }
 }
 
-//啟動視訊服務器
+// Start video server
 void startCameraServer(){
     //https://github.com/espressif/esp-idf/blob/master/components/esp_http_server/include/esp_http_server.h
-    httpd_config_t config = HTTPD_DEFAULT_CONFIG();  //可在HTTPD_DEFAULT_CONFIG()中設定Server Port
+    httpd_config_t config = HTTPD_DEFAULT_CONFIG();  // Server Port can be set in HTTPD_DEFAULT_CONFIG()
 
-    //可自訂網址路徑對應執行的函式
+    // Custom URL path mappings to execute functions
     httpd_uri_t index_uri = {
         .uri       = "/",             //http://192.168.xxx.xxx/
         .method    = HTTP_GET,
@@ -1463,7 +1465,7 @@ void startCameraServer(){
     
     Serial.printf("Starting web server on port: '%d'\n", config.server_port);  //TCP Port
     if (httpd_start(&camera_httpd, &config) == ESP_OK) {
-        //註冊自訂網址路徑對應執行的函式
+        // Register URL mappings to execute functions
         httpd_register_uri_handler(camera_httpd, &index_uri);
         httpd_register_uri_handler(camera_httpd, &cmd_uri);
         httpd_register_uri_handler(camera_httpd, &status_uri);
@@ -1478,7 +1480,7 @@ void startCameraServer(){
     }
 }
 
-//自訂指令拆解參數字串置入變數
+// Parse custom command parameter string and store in variables
 void getCommand(char c)
 {
   if (c=='?') ReceiveState=1;

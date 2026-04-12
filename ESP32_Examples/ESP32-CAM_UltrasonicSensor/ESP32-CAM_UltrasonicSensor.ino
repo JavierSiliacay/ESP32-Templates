@@ -1,7 +1,9 @@
 /*
 ESP32-CAM Ping Ultrasonic Sensor
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2020-5-22 23:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 //Ping Ultrasonic Sensor (If you use Ping Ultrasonic Sensor, you can't use SD card library at the same time.)
 Trig -> IO2
@@ -512,7 +514,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
     sensor_t * s = esp_camera_sensor_get();
     int res = 0;
 
-    //官方指令區塊，也可在此自訂指令  http://192.168.xxx.xxx/control?var=xxx&val=xxx
+    //官方指令區塊, 也可在此自訂指令  http://192.168.xxx.xxx/control?var=xxx&val=xxx
       if(!strcmp(variable, "framesize")) {
           if(s->pixformat == PIXFORMAT_JPEG) res = s->set_framesize(s, (framesize_t)val);
       }

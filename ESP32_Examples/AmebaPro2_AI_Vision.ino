@@ -2,8 +2,10 @@
 
 AmebaPro2 (Amb82-mini or Hub 8735 ultra) use openAI Vision and Gemini Vision.
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2023-6-12 19:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 openAI Vision
 https://platform.openai.com/docs/guides/vision
@@ -212,17 +214,17 @@ void setup()
 
   delay(5000);
   
-  //使用暫存影像，以同一影像做視覺辨識
+  // Use cached image for visual recognition with the same image
   Camera.getImage(0, &img_addr, &img_len);    
-  Serial.println((SendStillToOpenaiVision(openAI_key, "請描述影像，若有文字請摘要內容！", 0)));
-  Serial.println((SendStillToGeminiVision(Gemini_key, "請描述影像，若有文字請摘要內容！", 0)));
+  Serial.println((SendStillToOpenaiVision(openAI_key, "Please describe the image; if there's text, please summarize the content!", 0)));
+  Serial.println((SendStillToGeminiVision(Gemini_key, "Please describe the image; if there's text, please summarize the content!", 0)));
   
   /*
   
-  //使用即時影像，以不同影像做視覺辨識  
-  Serial.println((SendStillToOpenaiVision(openAI_key, "請描述影像，若有文字請摘要內容！", 1)));
+  // Use real-time image for visual recognition with different images
+  Serial.println((SendStillToOpenaiVision(openAI_key, "Please describe the image; if there's text, please summarize the content!", 1)));
   delay(5000);
-  Serial.println((SendStillToGeminiVision(Gemini_key, "請描述影像，若有文字請摘要內容！", 1)));
+  Serial.println((SendStillToGeminiVision(Gemini_key, "Please describe the image; if there's text, please summarize the content!", 1)));
   
   */
 

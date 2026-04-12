@@ -1,7 +1,9 @@
 /*
 ESP32-CAM (Send a captured photo by using Gmail)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2020-1-18 18:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Google Apps Script
 https://github.com/fustyles/webduino/blob/gs/SendCapturedImageByGmail_doPost.gs

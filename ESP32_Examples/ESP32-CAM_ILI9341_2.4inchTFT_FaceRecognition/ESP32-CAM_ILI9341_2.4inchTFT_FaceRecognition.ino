@@ -1,7 +1,9 @@
 /*
 ESP32-CAM_ILI9341_2.4inchTFT_FaceRecognition
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2020-12-19 12:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 http://192.168.xxx.xxx             //網頁首頁管理介面
 http://192.168.xxx.xxx:81/stream   //取得串流影像     <img src="http://192.168.xxx.xxx:81/stream">
@@ -38,13 +40,13 @@ boolean pageState = false;
 String recognize_face_matched_name[7] = {"Name0","Name1","Name2","Name3","Name4","Name5","Name6"};
   
 #include <WiFi.h>
-#include "soc/soc.h"             //用於電源不穩不重開機 
-#include "soc/rtc_cntl_reg.h"    //用於電源不穩不重開機 
-#include "esp_camera.h"          //視訊函式
+#include "soc/soc.h"             //For power instability non-reset 
+#include "soc/rtc_cntl_reg.h"    //For power instability non-reset 
+#include "esp_camera.h"          //Video functions
 #include "img_converters.h"      //影像格式轉換函式
 #include "fb_gfx.h"              //影像繪圖函式
-#include "fd_forward.h"          //人臉偵測函式
-#include "fr_forward.h"          //人臉辨識函式
+#include "fd_forward.h"          //Face detection functions
+#include "fr_forward.h"          //Face recognition functions
 #include "esp_http_server.h"
 #include "esp_timer.h"
 
@@ -546,7 +548,7 @@ static esp_err_t stream_handler(httpd_req_t *req){
     return res;
 }
 
-//拆解命令字串置入變數
+//Decompose command string and put into variables
 void getCommand(char c)
 {
   if (c=='?') ReceiveState=1;
@@ -580,8 +582,8 @@ void getCommand(char c)
 static esp_err_t cmd_handler(httpd_req_t *req){
     char*  buf;  //存取網址後帶的參數字串
     size_t buf_len;
-    char variable[128] = {0,};  //存取參數var值，可修改陣列長度。
-    char value[128] = {0,};  //存取參數val值，可修改陣列長度。
+    char variable[128] = {0,};  //存取參數var值, 可修改陣列長度。
+    char value[128] = {0,};  //存取參數val值, 可修改陣列長度。
     String myCmd = "";
     
     buf_len = httpd_req_get_url_query_len(req) + 1;
@@ -620,7 +622,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       Serial.println("cmd= "+cmd+" ,P1= "+P1+" ,P2= "+P2+" ,P3= "+P3+" ,P4= "+P4+" ,P5= "+P5+" ,P6= "+P6+" ,P7= "+P7+" ,P8= "+P8+" ,P9= "+P9);
       Serial.println(""); 
 
-      //自訂指令區塊  http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
+      //Custom command block  http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
       if (cmd=="your cmd") {
         // You can do anything
         // Feedback="<font color=\"red\">Hello World</font>";   //可為一般文字或HTML語法
@@ -656,8 +658,8 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       if (Feedback=="") Feedback=Command;  //若沒有設定回傳資料就回傳Command值
     
       const char *resp = Feedback.c_str();
-      httpd_resp_set_type(req, "text/html");  //設定回傳資料格式
-      httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");  //允許跨網域讀取
+      httpd_resp_set_type(req, "text/html");  //Set response data format
+      httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");  //Allow cross-domain access
       return httpd_resp_send(req, resp, strlen(resp));
     } 
     else {
@@ -665,7 +667,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       sensor_t * s = esp_camera_sensor_get();
       int res = 0;
   
-      //官方指令區塊，也可在此自訂指令  http://192.168.xxx.xxx/control?var=xxx&val=xxx
+      //官方指令區塊, 也可在此自訂指令  http://192.168.xxx.xxx/control?var=xxx&val=xxx
       if(!strcmp(variable, "framesize")) {
           if(s->pixformat == PIXFORMAT_JPEG) res = s->set_framesize(s, (framesize_t)val);
       }
@@ -702,7 +704,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
         const char *resp = Feedback.c_str();
         httpd_resp_set_type(req, "text/html");
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-        return httpd_resp_send(req, resp, strlen(resp));  //回傳參數字串
+        return httpd_resp_send(req, resp, strlen(resp));  //Return parameter string
       }
       else {
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
@@ -1376,7 +1378,7 @@ void startCameraServer(){
 
     ra_filter_init(&ra_filter, 20);
     
-    //臉部偵測參數設定  https://github.com/espressif/esp-face/blob/master/face_detection/README.md
+    //Face detection parameter settings  https://github.com/espressif/esp-face/blob/master/face_detection/README.md
     mtmn_config.type = FAST;
     mtmn_config.min_face = 80;
     mtmn_config.pyramid = 0.707;
@@ -1393,7 +1395,7 @@ void startCameraServer(){
     
     Serial.printf("Starting web server on port: '%d'\n", config.server_port);  //TCP Port
     if (httpd_start(&camera_httpd, &config) == ESP_OK) {
-        //註冊自訂網址路徑對應執行的函式
+        //Register custom URL path handlers
         httpd_register_uri_handler(camera_httpd, &index_uri);
         httpd_register_uri_handler(camera_httpd, &cmd_uri);
         httpd_register_uri_handler(camera_httpd, &status_uri);
@@ -1409,13 +1411,13 @@ void startCameraServer(){
 }
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
     
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  //Enable debug output
   Serial.println();
 
-  //視訊組態設定
+  //Video configuration settings
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -1441,14 +1443,14 @@ void setup() {
   config.jpeg_quality = 12;
   config.fb_count = 1; 
 
-  //視訊初始化
+  //Video initialization
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed with error 0x%x", err);
     return;
   }
 
-  //臉部偵測參數設定  https://github.com/espressif/esp-face/blob/master/face_detection/README.md
+  //Face detection parameter settings  https://github.com/espressif/esp-face/blob/master/face_detection/README.md
   mtmn_config.type = FAST;  //FAST or NORMAL
   mtmn_config.min_face = 80;
   mtmn_config.pyramid = 0.707;
@@ -1472,7 +1474,7 @@ void setup() {
   //指定Client端靜態IP
   //WiFi.config(IPAddress(192, 168, 201, 100), IPAddress(192, 168, 201, 2), IPAddress(255, 255, 255, 0));
 
-  WiFi.begin(ssid, password);    //執行網路連線
+  WiFi.begin(ssid, password);    //Start network connection
 
   delay(1000);
   Serial.println("");
@@ -1482,11 +1484,11 @@ void setup() {
   long int StartTime=millis();
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    if ((StartTime+10000) < millis()) break;    //等待10秒連線
+    if ((StartTime+10000) < millis()) break;    //Wait 10 seconds for connection
   } 
 
-  if (WiFi.status() == WL_CONNECTED) {    //若連線成功
-    WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+  if (WiFi.status() == WL_CONNECTED) {    //If connection successful
+    WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //Set SSID to show client IP         
     Serial.println("");
     Serial.println("STAIP address: ");
     Serial.println(WiFi.localIP()); 
@@ -1516,7 +1518,7 @@ void setup() {
   Serial.println(WiFi.softAPIP());  
   Serial.println("");
   
-  //設定閃光燈為低電位
+  //Set flash light to LOW
   pinMode(4, OUTPUT);
   digitalWrite(4, LOW);
 
@@ -1584,7 +1586,7 @@ void loop() {
                   
         int matched_id = run_face_recognition(image_matrix, net_boxes);  //執行人臉辨識取得相符id
 
-        for (int i = 0; i < net_boxes->len; i++){  //列舉人臉位置與大小
+        for (int i = 0; i < net_boxes->len; i++){  //List face position and size
               if (matched_id==i) {  //僅辨識出的人臉才繪製框架
                   //Serial.println("index = " + String(i));
                   x_ = (int16_t)net_boxes->box[i].box_p[0];

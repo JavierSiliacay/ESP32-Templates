@@ -1,6 +1,8 @@
 /* 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-4-22 20:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 */
 
 #include <ESP8266WiFi.h>

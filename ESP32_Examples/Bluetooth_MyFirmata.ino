@@ -1,8 +1,10 @@
 /*
 Arduino Uno + Bluetooth(or ESP8266)...with Uart
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2018-08-07 13:00 
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Uart Command Format : 
 ?cmd=str1;str2;str3;str4;str5;str6;str7;str8;str9

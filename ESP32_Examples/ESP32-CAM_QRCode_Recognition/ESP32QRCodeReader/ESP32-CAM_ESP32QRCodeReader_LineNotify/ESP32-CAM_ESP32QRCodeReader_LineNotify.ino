@@ -1,7 +1,9 @@
 /*
 ESP32-CAM (Save a captured photo to Line Notify)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-7-4 13:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 You could only send up to 50 images to Line Notify in one hour.
 The maximum size of post-upload image is XGA(1024*768).
@@ -18,8 +20,8 @@ String lineNotifyToken = "";    //Line Notify Token
 
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
-#include "soc/soc.h"             //用於電源不穩不重開機 
-#include "soc/rtc_cntl_reg.h"    //用於電源不穩不重開機 
+#include "soc/soc.h"             //For power instability non-reset 
+#include "soc/rtc_cntl_reg.h"    //For power instability non-reset 
 
 #include "ESP32CameraPins.h"     //ESP32 Camera腳位定義
 #include "ESP32QRCodeReader.h"   //ESP32 QRCode Reader函式
@@ -29,10 +31,10 @@ struct QRCodeData qrCodeData;
 
 void setup()
 {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
     
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  //Enable debug output
   Serial.println();
 
   //閃光燈(GPIO4)
@@ -45,7 +47,7 @@ void setup()
   //WiFi.config(IPAddress(192, 168, 201, 100), IPAddress(192, 168, 201, 2), IPAddress(255, 255, 255, 0));
 
   for (int i=0;i<2;i++) {
-    WiFi.begin(ssid, password);    //執行網路連線
+    WiFi.begin(ssid, password);    //Start network connection
   
     delay(1000);
     Serial.println("");
@@ -55,10 +57,10 @@ void setup()
     long int StartTime=millis();
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
-        if ((StartTime+5000) < millis()) break;    //等待10秒連線
+        if ((StartTime+5000) < millis()) break;    //Wait 10 seconds for connection
     } 
   
-    if (WiFi.status() == WL_CONNECTED) {    //若連線成功
+    if (WiFi.status() == WL_CONNECTED) {    //If connection successful
       Serial.println("");
       Serial.println("STAIP address: ");
       Serial.println(WiFi.localIP());
@@ -74,7 +76,7 @@ void setup()
     }
   } 
 
-  if (WiFi.status() != WL_CONNECTED) {    //若連線失敗
+  if (WiFi.status() != WL_CONNECTED) {    //If connection failed
     for (int i=0;i<2;i++) {    //若連不上WIFI設定閃光燈慢速閃爍
       ledcWrite(4,10);
       delay(1000);

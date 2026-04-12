@@ -2,10 +2,12 @@
 ESP32-CAM Face recognition (face-api.js)
 https://github.com/justadudewhohacks/face-api.js/
 
-因為人臉辨識會不斷地消耗記憶體，所以設計切換辨識開關僅執行一次辨識即復原。
+因為人臉辨識會不斷地消耗記憶體, 所以設計切換辨識開關僅執行一次辨識即復原。
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-7-4 15:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 AP IP: 192.168.4.1
 http://192.168.xxx.xxx             //網頁首頁管理介面
@@ -27,14 +29,14 @@ http://192.168.xxx.xxx?servo=pin;value         //伺服馬達 value= 0~180
 http://192.168.xxx.xxx?relay=pin;value         //繼電器 value = 0, 1
 http://192.168.xxx.xxx?uart=value              //UART
 
-http://192.168.xxx.xxx?framesize=value          //解析度 value = 10->UXGA(1600x1200), 9->SXGA(1280x1024), 8->XGA(1024x768) ,7->SVGA(800x600), 6->VGA(640x480), 5 selected=selected->CIF(400x296), 4->QVGA(320x240), 3->HQVGA(240x176), 0->QQVGA(160x120), 11->QXGA(2048x1564 for OV3660)
+http://192.168.xxx.xxx?framesize=value          //Resolution value = 10->UXGA(1600x1200), 9->SXGA(1280x1024), 8->XGA(1024x768) ,7->SVGA(800x600), 6->VGA(640x480), 5 selected=selected->CIF(400x296), 4->QVGA(320x240), 3->HQVGA(240x176), 0->QQVGA(160x120), 11->QXGA(2048x1564 for OV3660)
 http://192.168.xxx.xxx?quality&val=value        //畫質 value = 10 ~ 63
 http://192.168.xxx.xxx?brightness=value         //亮度 value = -2 ~ 2
 http://192.168.xxx.xxx?contrast=value           //對比 value = -2 ~ 2
 http://192.168.xxx.xxx?saturation=value         //飽和度 value = -2 ~ 2 
 http://192.168.xxx.xxx?special_effect=value     //特效 value = 0 ~ 6
-http://192.168.xxx.xxx?hmirror=value            //水平鏡像 value = 0 or 1 
-http://192.168.xxx.xxx?vflip=value              //垂直翻轉 value = 0 or 1 
+http://192.168.xxx.xxx?hmirror=value            //Horizontal mirror value = 0 or 1 
+http://192.168.xxx.xxx?vflip=value              //Vertical flip value = 0 or 1 
 
 視訊參數說明
 https://heyrick.eu/blog/index.php?diary=20210418
@@ -53,8 +55,8 @@ String lineNotifyToken = "";    //Line Notify Token
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include "esp_camera.h"         //視訊
-#include "soc/soc.h"            //用於電源不穩不重開機
-#include "soc/rtc_cntl_reg.h"   //用於電源不穩不重開機
+#include "soc/soc.h"            //For power instability non-reset
+#include "soc/rtc_cntl_reg.h"   //For power instability non-reset
 
 String Feedback="";   //回傳客戶端訊息
 //指令參數值
@@ -88,13 +90,13 @@ WiFiServer server(80);
 WiFiClient client;
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
   
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  //Enable debug output
   Serial.println();
 
-  //視訊組態設定
+  //Video configuration settings
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -149,7 +151,7 @@ void setup() {
   //WiFi.config(IPAddress(192, 168, 201, 100), IPAddress(192, 168, 201, 2), IPAddress(255, 255, 255, 0));
 
   for (int i=0;i<2;i++) {
-    WiFi.begin(ssid, password);    //執行網路連線
+    WiFi.begin(ssid, password);    //Start network connection
   
     delay(1000);
     Serial.println("");
@@ -159,11 +161,11 @@ void setup() {
     long int StartTime=millis();
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
-        if ((StartTime+5000) < millis()) break;    //等待10秒連線
+        if ((StartTime+5000) < millis()) break;    //Wait 10 seconds for connection
     } 
   
-    if (WiFi.status() == WL_CONNECTED) {    //若連線成功
-      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+    if (WiFi.status() == WL_CONNECTED) {    //If connection successful
+      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //Set SSID to show client IP         
       Serial.println("");
       Serial.println("STAIP address: ");
       Serial.println(WiFi.localIP());
@@ -179,7 +181,7 @@ void setup() {
     }
   } 
 
-  if (WiFi.status() != WL_CONNECTED) {    //若連線失敗
+  if (WiFi.status() != WL_CONNECTED) {    //If connection failed
     WiFi.softAP((WiFi.softAPIP().toString()+"_"+(String)apssid).c_str(), appassword);         
 
     for (int i=0;i<2;i++) {    //若連不上WIFI設定閃光燈慢速閃爍
@@ -266,7 +268,7 @@ void ExecuteCommand() {
     Serial.println("");
   }
 
-  //自訂指令區塊  http://192.168.xxx.xxx?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
+  //Custom command block  http://192.168.xxx.xxx?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
   if (cmd=="your cmd") {
     // You can do anything
     // Feedback="<font color=\"red\">Hello World</font>";   //可為一般文字或HTML語法
@@ -371,10 +373,10 @@ void ExecuteCommand() {
   } else if (cmd=="special_effect") {  //特效
     sensor_t * s = esp_camera_sensor_get();
     s->set_special_effect(s, P1.toInt());  
-  } else if (cmd=="hmirror") {  //水平鏡像
+  } else if (cmd=="hmirror") {  //Horizontal mirror
     sensor_t * s = esp_camera_sensor_get();
     s->set_hmirror(s, P1.toInt());  
-  } else if (cmd=="vflip") {  //垂直翻轉
+  } else if (cmd=="vflip") {  //Vertical flip
     sensor_t * s = esp_camera_sensor_get();
     s->set_vflip(s, P1.toInt());  
   } else {
@@ -383,7 +385,7 @@ void ExecuteCommand() {
   if (Feedback=="") Feedback=Command;  
 }
 
-//拆解命令字串置入變數
+//Decompose command string and put into variables
 void getCommand(char c)
 {
   if (c=='?') ReceiveState=1;
@@ -709,7 +711,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(<!doctype html>
         <script src='https:\/\/fustyles.github.io/webduino/TensorFlow/Face-api/face-api.min.js'></script> 
     </head>
     <body>
-    ESP32-CAM IP：<input type="text" id="ip" size="20" value="192.168.">&nbsp;&nbsp;<input type="button" value="Set" onclick="start();">    
+    ESP32-CAM IP: <input type="text" id="ip" size="20" value="192.168.">&nbsp;&nbsp;<input type="button" value="Set" onclick="start();">    
         <figure>
             <div id="stream-container" class="image-container hidden">
               <div class="close" id="close-stream">×</div>
@@ -833,7 +835,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(<!doctype html>
                 </div>
             </div>
         </section>
-        Result：<input type="checkbox" id="chkResult" checked>
+        Result: <input type="checkbox" id="chkResult" checked>
         <div id="message" style="color:red">Please wait for loading model.<div>
                 
         <script>
@@ -851,7 +853,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(<!doctype html>
         //Model: https://github.com/fustyles/webduino/tree/master/TensorFlow/Face-api
         const faceImagesPath = 'https://fustyles.github.io/webduino/TensorFlow/Face-api/facelist/';     //人名命名的資料夾路徑
         const faceLabels = ['France', 'ChilingLin'];     //人名命名的資料夾列表
-        faceImagesCount = 2 ;                            //每個人名命名的資料夾內的照片數，以流水編號命名JPG圖檔 1.jpg, 2.jpg...
+        faceImagesCount = 2 ;                            //每個人名命名的資料夾內的照片數, 以流水編號命名JPG圖檔 1.jpg, 2.jpg...
         
         const modelPath = 'https://fustyles.github.io/webduino/TensorFlow/Face-api/';
         let displaySize = { width:320, height: 240 }
@@ -882,7 +884,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(<!doctype html>
           if (uart.checked) {
             let displaySize = { width:canvas.width, height: canvas.height }
       
-            faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, Number(distancelimit.value))  //距離上限，若超過此值則顯示unknow，否則顯示人名
+            faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, Number(distancelimit.value))  //距離上限, 若超過此值則顯示unknow, 否則顯示人名
             
             const detections = await faceapi.detectAllFaces(canvas).withFaceLandmarks().withFaceDescriptors();
             const resizedDetections = faceapi.resizeResults(detections, displaySize);
@@ -912,7 +914,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(<!doctype html>
                 drawBox.draw(canvas);
               })
               
-              uart.checked = false;  //因為每辨識一次就吃一點記憶體，所以辨識完就暫停辨識。
+              uart.checked = false;  //因為每辨識一次就吃一點記憶體, 所以辨識完就暫停辨識。
               if (chkResult.checked) message.innerHTML = res;            
           }
           aiStill.click();
@@ -1059,7 +1061,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(<!doctype html>
             hide(viewContainer)
           }
           
-          //新增重啟電源按鈕點選事件 (自訂指令格式：http://192.168.xxx.xxx/?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9)
+          //新增重啟電源按鈕點選事件 (自訂指令格式: http://192.168.xxx.xxx/?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9)
           restartButton.onclick = () => {
             fetch(baseHost+"/?restart");
           }    

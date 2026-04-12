@@ -1,6 +1,8 @@
 /*
-  Author : ChungYi Fu (Kaohsiung, Taiwan)  Modified: 2021-6-21 20:30
-  https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
   
   Refer to the code. (ESP32-arduino core version 1.06)
   https://github.com/jameszah/ESP32-CAM-Video-Recorder-junior/blob/master/ESP32-CAM-Video-Recorder-junior-50x-lpmod.ino
@@ -11,21 +13,21 @@
   https://fustyles.github.io/webduino/CautionArea/ESP32-CAM-Video-Recorder-junior_en_Page.html   (English)
   https://fustyles.github.io/webduino/CautionArea/ESP32-CAM-Video-Recorder-junior-Page.html   (Traditional Chinese)
   You must change Chrome settings to allow "insecure content".
-  URL： chrome://settings/content/siteDetails?site=https://fustyles.github.io
+  URL:  chrome://settings/content/siteDetails?site=https://fustyles.github.io
 
-  Chrome瀏覽器設定須更改：允許開啟不安全內容。否則http未加密連結會被阻擋無法串流！若將網頁下載到本機執行，則不用更改安全性設定。
+  Chrome browser settings must be changed: Allow insecure content. Otherwise, http unencrypted links will be blocked and unable to stream! If the webpage is downloaded to the local machine, security settings do not need to be changed.
 
 
-  http://192.168.xxx.xxx             //網頁首頁管理介面
-  http://192.168.xxx.xxx:81/stream   //取得串流影像       <img src="http://192.168.xxx.xxx:81/stream">
-  http://192.168.xxx.xxx/capture     //取得影像          <img src="http://192.168.xxx.xxx/capture">
-  http://192.168.xxx.xxx/status      //取得視訊參數值
-  http://192.168.xxx.xxx/list        //取得TF卡檔案清單
-  http://192.168.xxx.xxx/wifi        //設定區域網路Wi-Fi帳號密碼  
+  http://192.168.xxx.xxx             //Web homepage management interface
+  http://192.168.xxx.xxx:81/stream   //Get streaming video       <img src="http://192.168.xxx.xxx:81/stream">
+  http://192.168.xxx.xxx/capture     //Get image          <img src="http://192.168.xxx.xxx/capture">
+  http://192.168.xxx.xxx/status      //Get video parameter values
+  http://192.168.xxx.xxx/list        //Get TF card file list
+  http://192.168.xxx.xxx/wifi        //Set local network Wi-Fi SSID and password  
 
-  預設AP端IP： 192.168.4.1
+  Default AP IP: 192.168.4.1
     
-  自訂指令格式 :  
+  Custom command format :  
   http://APIP/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
   http://STAIP/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
   
@@ -37,7 +39,7 @@
   http://192.168.xxx.xxx/control?resetfilegroup             //Reset file group
   http://192.168.xxx.xxx/control?message                    //Get record state   
 
-  官方指令格式 
+  Official command format 
   http://192.168.xxx.xxx/control?var=***&val=***
   http://192.168.xxx.xxx/control?var=framesize&val=value    // value = 10->UXGA(1600x1200), 9->SXGA(1280x1024), 8->XGA(1024x768) ,7->SVGA(800x600), 6->VGA(640x480), 5 selected=selected->CIF(400x296), 4->QVGA(320x240), 3->HQVGA(240x176), 0->QQVGA(160x120)
   http://192.168.xxx.xxx/control?var=quality&val=value      // value = 10 ~ 63
@@ -47,8 +49,8 @@
   http://192.168.xxx.xxx/control?var=vflip&val=value        // value = 0 or 1 
   http://192.168.xxx.xxx/control?var=flash&val=value        // value = 0 ~ 255 
 
-  查詢Client端IP：
-  查詢IP：http://192.168.4.1/?ip  
+  Query Client IP:
+  Query IP: http://192.168.4.1/?ip  
 */
 
 /*
@@ -72,19 +74,19 @@
 const char* apssid = "Recorder";
 const char* appassword = "12345678";   //AP password require at least 8 characters.
 
-String LineToken = "";  //傳送區域網路IP至Line通知(用不到可不填)
+String LineToken = "";  //Send local network IP to Line notification (leave blank if not used)
 
-String devstr =  "classroom1_";            //檔名
-boolean recordOnce = false;            //false: 分段連續錄影  true：錄完一段後即停止
-boolean resetfilegroup = false;        //重設檔名群組流水號狀態值為1
+String devstr =  "classroom1_";            //Filename
+boolean recordOnce = false;            //false: Continuous segmented recording  true: Stop after one segment
+boolean resetfilegroup = false;        //Reset file group serial number status value to 1
 
-int avi_length = 180;                  // 設定錄影時間長度(秒) how long a movie in seconds
-int framesize = FRAMESIZE_CIF;        // 設定影像解析度 UXGA(1600x1200)|SXGA(1280x1024)|XGA(1024x768)|SVGA(800x600)|VGA(640x480)|CIF(400x296)|QVGA(320x240)|HQVGA(240x176)|QQVGA(160x120)  
-int quality = 10;                      // 設定影像品質，值越小品質越高 10 ~ 63 
+int avi_length = 180;                  // Set recording length (seconds) how long a movie in seconds
+int framesize = FRAMESIZE_CIF;        // Set image resolution UXGA(1600x1200)|SXGA(1280x1024)|XGA(1024x768)|SVGA(800x600)|VGA(640x480)|CIF(400x296)|QVGA(320x240)|HQVGA(240x176)|QQVGA(160x120)  
+int quality = 10;                      // Set image quality, lower value means higher quality 10 ~ 63 
 
-String Feedback="",recordMessage="";   //回傳客戶端訊息
-String Command="",cmd="",P1="",P2="",P3="",P4="",P5="",P6="",P7="",P8="",P9="";  //指令參數值
-byte ReceiveState=0,cmdState=1,strState=1,questionstate=0,equalstate=0,semicolonstate=0;  //指令拆解狀態值
+String Feedback="",recordMessage="";   //Returned client messages
+String Command="",cmd="",P1="",P2="",P3="",P4="",P5="",P6="",P7="",P8="",P9="";  //Command parameter values
+byte ReceiveState=0,cmdState=1,strState=1,questionstate=0,equalstate=0,semicolonstate=0;  //Command parsing status values
 
 //https://github.com/espressif/arduino-esp32/blob/master/libraries/Preferences/src/Preferences.h
 #include <Preferences.h>
@@ -1473,7 +1475,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       //Serial.println("cmd= "+cmd+" ,P1= "+P1+" ,P2= "+P2+" ,P3= "+P3+" ,P4= "+P4+" ,P5= "+P5+" ,P6= "+P6+" ,P7= "+P7+" ,P8= "+P8+" ,P9= "+P9);
       //Serial.println(""); 
 
-      //自訂指令區塊  http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
+      //Custom command block  http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
       if (cmd=="resetwifi") {
         Preferences_write("wifi", "ssid", P1.c_str());
         Preferences_write("wifi", "password", P2.c_str());
@@ -1500,7 +1502,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
           }
         }
       }    
-      else if (cmd=="clearwifi") {  //清除閃存中Wi-Fi資料  
+      else if (cmd=="clearwifi") {  //Clear Wi-Fi data from flash memory  
         Preferences_write("wifi", "ssid", "");
         Preferences_write("wifi", "password", "");
       }                   
@@ -1534,8 +1536,8 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       }
     
       const char *resp = Feedback.c_str();
-      httpd_resp_set_type(req, "text/html");  //設定回傳資料格式
-      httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");  //允許跨網域讀取
+      httpd_resp_set_type(req, "text/html");  //Set response data format
+      httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");  //Allow cross-domain access
       return httpd_resp_send(req, resp, strlen(resp));    
     } 
     else {
@@ -1585,7 +1587,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
         const char *resp = Feedback.c_str();
         httpd_resp_set_type(req, "text/html");
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-        return httpd_resp_send(req, resp, strlen(resp));  //回傳參數字串
+        return httpd_resp_send(req, resp, strlen(resp));  //Return parameter string
       }
       else {
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
@@ -1790,7 +1792,7 @@ void startCameraServer() {
   Serial.println("");
   Serial.printf("Starting web server on port: '%d'\n", config.server_port);  //Server Port
   if (httpd_start(&camera_httpd, &config) == ESP_OK) {
-      //註冊自訂網址路徑對應執行的函式
+      //Register custom URL path handlers
     httpd_register_uri_handler(camera_httpd, &index_uri);
     httpd_register_uri_handler(camera_httpd, &capture_uri);
     httpd_register_uri_handler(camera_httpd, &stream_uri);
@@ -1815,10 +1817,10 @@ void stopCameraServer() {
 }
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
   
   Serial.begin(115200);
-  //Serial.setDebugOutput(true);  //開啟診斷輸出
+  //Serial.setDebugOutput(true);  //Enable debug output
   Serial.println();
 
   pinMode(33, OUTPUT);             // little red led on back of chip
@@ -1830,7 +1832,7 @@ void setup() {
   WiFi.mode(WIFI_AP_STA);
 
   Serial.println();
-  //設定預設區域網路Wi-Fi帳號與密碼，或清除Wi-Fi設定
+  //Set default Wi-Fi SSID and password, or clear Wi-Fi settings
   //Preferences_write("wifi", "ssid", "");
   //Preferences_write("wifi", "password", "");
         
@@ -1839,7 +1841,7 @@ void setup() {
 
   if (wifi_ssid!="") {
     for (int i=0;i<2;i++) {
-      WiFi.begin(wifi_ssid.c_str(), wifi_password.c_str());    //執行網路連線
+      WiFi.begin(wifi_ssid.c_str(), wifi_password.c_str());    //Start network connection
     
       delay(1000);
       Serial.println("");
@@ -1849,11 +1851,11 @@ void setup() {
       long int StartTime=millis();
       while (WiFi.status() != WL_CONNECTED) {
           delay(500);
-          if ((StartTime+5000) < millis()) break;    //等待10秒連線
+          if ((StartTime+5000) < millis()) break;    //Wait 5 seconds for connection
       } 
     
-      if (WiFi.status() == WL_CONNECTED) {    //若連線成功
-        WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+      if (WiFi.status() == WL_CONNECTED) {    //If connection successful
+        WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //Set SSID to show client IP         
         Serial.println("");
         Serial.println("STAIP address: ");
         Serial.println(WiFi.localIP());
@@ -1866,7 +1868,7 @@ void setup() {
     } 
   }
 
-  if (WiFi.status() != WL_CONNECTED) {    //若連線失敗
+  if (WiFi.status() != WL_CONNECTED) {    //If connection failed
     WiFi.softAP((WiFi.softAPIP().toString()+"_"+(String)apssid).c_str(), appassword);         
   }  
   
@@ -1969,7 +1971,7 @@ void setup() {
 
   startCameraServer(); 
 
-  //設定閃光燈為低電位
+  //Set flash light to LOW
   pinMode(4, OUTPUT);
   digitalWrite(4, LOW);    
 }
@@ -2155,7 +2157,7 @@ void loop() {
   delay(200);
 }
 
-//拆解命令字串置入變數
+//Decompose command string and put into variables
 void getCommand(char c)
 {
   if (c=='?') ReceiveState=1;

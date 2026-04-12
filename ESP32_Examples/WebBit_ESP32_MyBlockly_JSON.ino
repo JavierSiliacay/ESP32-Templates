@@ -1,7 +1,9 @@
 /* 
 WebBit(BPI-bit) (ESP32) MyBlockly
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2019-12-21 13:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Library
 https://github.com/nhatuan84/esp32-lcd
@@ -12,7 +14,7 @@ Command Format :
 http://APIP/?cmd=p1;p2;p3;p4;p5;p6;p7;p8;p9
 http://STAIP/?cmd=p1;p2;p3;p4;p5;p6;p7;p8;p9
 
-Default APIP： 192.168.4.1
+Default APIP: 192.168.4.1
 http://192.168.4.1/?ip
 http://192.168.4.1/?mac
 http://192.168.4.1/?restart
@@ -53,9 +55,9 @@ http://192.168.4.1/?accel
 http://192.168.4.1/?gyro
 http://192.168.4.1/?mag
     
-STAIP：
-Query：http://192.168.4.1/?ip
-Link：http://192.168.4.1/?resetwifi=ssid;password
+STAIP:
+Query: http://192.168.4.1/?ip
+Link: http://192.168.4.1/?resetwifi=ssid;password
 
 If you don't need to get response from WebBit(BPI-bit) and want to execute commands quickly, 
 you can append a parameter value "stop" at the end of command.

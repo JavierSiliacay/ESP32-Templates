@@ -1,7 +1,9 @@
 /*
 ESP32-CAM (Read the image file from SD card and upload it to Google Drive)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2023-10-1 23:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 如何新增Google Script
 https://www.youtube.com/watch?v=f46VBqWwUuI
@@ -55,11 +57,11 @@ char *input;
 
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
-#include "soc/soc.h"            //用於電源不穩不重開機
-#include "soc/rtc_cntl_reg.h"   //用於電源不穩不重開機
+#include "soc/soc.h"            //For power instability non-reset
+#include "soc/rtc_cntl_reg.h"   //For power instability non-reset
 #include "FS.h"                 //file system wrapper
-#include "SD_MMC.h"             //SD卡存取函式庫
-#include "Base64.h"             //不可使用Arduino IDE內建的函式庫，請從github下載Base64.cpp, Base64.h置於同一資料夾
+#include "SD_MMC.h"             //SD card access functions庫
+#include "Base64.h"             //不可使用Arduino IDE內建的函式庫, 請從github下載Base64.cpp, Base64.h置於同一資料夾
 
 void setup() {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電壓不穩時重啟電源設定

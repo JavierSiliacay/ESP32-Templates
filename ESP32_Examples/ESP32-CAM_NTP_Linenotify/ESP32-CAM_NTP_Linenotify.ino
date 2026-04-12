@@ -1,7 +1,9 @@
 /*
 ESP32-CAM NTP　(Send a captured photo to Line Notify)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-4-22 20:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 You could only send up to 50 images to Line Notify in one hour.
 The maximum size of post-upload image is XGA(1024*768).
@@ -275,9 +277,9 @@ String sendCapturedImage2LineNotify() {
       Serial.println("Camera capture failed");
       return "error";
   } else {
-      image_matrix = dl_matrix3du_alloc(1, fb->width, fb->height, 3);  //分配內部記憶體
+      image_matrix = dl_matrix3du_alloc(1, fb->width, fb->height, 3);  //Allocate internal memory
 
-      fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item);  //影像格式轉換RGB格式
+      fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item);  //Image format converted to RGB
       face_detect(image_matrix, &mtmn_config);
           
       //在畫面上顯示時間

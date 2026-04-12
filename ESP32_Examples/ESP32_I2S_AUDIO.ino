@@ -1,8 +1,10 @@
 /* 
 ESP32 (PSRAM) + I2S AUDIO OUTPUT
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2025-8-14 13:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Development Environment
 Arduino IDE 1.8.19

@@ -1,12 +1,17 @@
 /* 
 Arduino Uno + ESP-01 (AT Command)
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2018-08-07 22:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Expanding Arduino Serial Port Buffer Size
 https://internetofhomethings.com/homethings/?p=927
-https://www.facebook.com/francefu/videos/10211231615856099/
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 */
 
 // Enter your WiFi ssid and password

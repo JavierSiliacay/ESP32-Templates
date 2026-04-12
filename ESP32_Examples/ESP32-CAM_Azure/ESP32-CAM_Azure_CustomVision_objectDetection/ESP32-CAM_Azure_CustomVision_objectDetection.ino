@@ -1,7 +1,9 @@
 /*
 ESP32-CAM Custom Vision (Object Detection)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2019-8-26 00:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 */
 
 // Enter your WiFi ssid and password

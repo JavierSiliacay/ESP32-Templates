@@ -1,7 +1,9 @@
 /*
 ESP32-CAM (with flash) Send Google map url and still with GPS coordinate to Line notify
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2024-2-7 10:40
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Arduino IDE: 
 Arduino core for the ESP32 V1.0.6
@@ -282,7 +284,7 @@ void loop()
     String mapURL = "https://www.google.com/maps/search/?api=1&map_action=map&zoom=16&query="+coordinate;
     sendStillPrintGPSToLineNotify(lineToken, mapURL, coordinate);
   
-    delay(72000);  //Line Notify上限 50張/時，平均間隔72秒
+    delay(72000);  //Line Notify上限 50張/時, 平均間隔72秒
   }
 
   /*

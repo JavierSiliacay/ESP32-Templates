@@ -1,8 +1,8 @@
 //https://github.com/alvarowolfx/ESP32QRCodeReader
 
 #include <Arduino.h>
-#include "soc/soc.h"             //用於電源不穩不重開機 
-#include "soc/rtc_cntl_reg.h"    //用於電源不穩不重開機 
+#include "soc/soc.h"             //For power instability non-reset 
+#include "soc/rtc_cntl_reg.h"    //For power instability non-reset 
 #include "ESP32CameraPins.h"
 #include "ESP32QRCodeReader.h"
 
@@ -10,10 +10,10 @@ ESP32QRCodeReader reader(CAMERA_MODEL_AI_THINKER);
 struct QRCodeData qrCodeData;
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
     
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  //Enable debug output
   Serial.println();
 
   reader.setup();

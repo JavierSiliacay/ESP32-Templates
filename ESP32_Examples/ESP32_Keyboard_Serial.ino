@@ -1,7 +1,9 @@
 /*
 ESp32 Keyboard by using uart (web serial)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2022-10-27 10:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Library: 
 https://github.com/T-vK/ESp32-BLE-Keyboard

@@ -1,7 +1,9 @@
 /*
 ESP32-CAM Save a captured photo(Base64) to mySQL. 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2019-9-29 23:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Google Apps Script
 https://github.com/fustyles/webduino/blob/gs/SendCapturedImageToMySQL_doPost.gs

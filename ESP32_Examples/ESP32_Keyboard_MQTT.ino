@@ -1,7 +1,9 @@
 /*
 ESp32 Keyboard by using MQTT
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2022-10-27 00:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Library: 
 https://github.com/T-vK/ESp32-BLE-Keyboard
@@ -303,7 +305,7 @@ void initWiFi() {
     }
   } 
 
-  if (WiFi.status() != WL_CONNECTED) {    //若連線失敗
+  if (WiFi.status() != WL_CONNECTED) {    //If connection failed
     pinMode(2, OUTPUT);
     for (int k=0;k<2;k++) {
       digitalWrite(2,HIGH);

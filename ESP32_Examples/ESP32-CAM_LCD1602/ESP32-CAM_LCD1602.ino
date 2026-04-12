@@ -1,7 +1,9 @@
 /*
 ESP32-CAM LCD1602
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2020-6-3 21:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Library
 https://github.com/johnrickman/LiquidCrystal_I2C

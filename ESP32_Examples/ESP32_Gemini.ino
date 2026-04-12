@@ -1,7 +1,9 @@
 /* 
 ESP32 Use Gemini API
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2024-12-16 00:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Tutorial
 https://ai.google.dev/gemini-api/docs

@@ -1,7 +1,9 @@
 /*
 ESP32 Make your line bot send messages to users
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2024-11-4 17:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 */
 
 String linebot_token = "";    // Channel access token

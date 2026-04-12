@@ -1,7 +1,9 @@
 /* 
 LinkIt7697 MyFirmata
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2020-03-14 18:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Command Format :  
 http://STAIP/?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9

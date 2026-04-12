@@ -2,8 +2,10 @@
 Electric Fan (NodeMCU ESP32)
 You must provide stable and large enough current for ESP or the fan will not work properly.
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2018-08-05 22:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Servo -> GPIO12
 Motor Driver IC -> GPIO14, GPIO27
@@ -15,7 +17,7 @@ http://STAIP/?cmd=str1;str2;str3;str4;str5;str6;str7;str8;str9
 Default APIP: 
 http://192.168.4.1
 
-STAIP：
+STAIP: 
 http://192.168.4.1/?resetwifi=ssid;password
 
 If you don't need to get response from ESP8266 and want to execute commands quickly, 

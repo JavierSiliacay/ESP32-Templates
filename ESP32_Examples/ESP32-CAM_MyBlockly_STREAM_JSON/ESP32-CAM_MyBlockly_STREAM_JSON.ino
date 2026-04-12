@@ -1,7 +1,9 @@
 /*
 ESP32-CAM MyBlock模組(JSON)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-7-3 22:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 http://192.168.xxx.xxx             //網頁首頁管理介面
 http://192.168.xxx.xxx:81/stream   //取得串流影像       網頁語法 <img src="http://192.168.xxx.xxx:81/stream">
@@ -12,7 +14,7 @@ http://192.168.xxx.xxx/status      //取得影像狀態值
 http://APIP/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 http://STAIP/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 
-預設AP端IP： 192.168.4.1
+預設AP端IP:  192.168.4.1
 http://192.168.xxx.xxx/control?ip
 http://192.168.xxx.xxx/control?mac
 http://192.168.xxx.xxx/control?restart
@@ -145,13 +147,13 @@ httpd_handle_t camera_httpd = NULL;
 #define PCLK_GPIO_NUM     22
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
     
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  //Enable debug output
   Serial.println();
 
-  //視訊組態設定  https://github.com/espressif/esp32-camera/blob/master/driver/include/esp_camera.h
+  //Video configuration settings  https://github.com/espressif/esp32-camera/blob/master/driver/include/esp_camera.h
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -181,7 +183,7 @@ void setup() {
   //   
   // if PSRAM IC present, init with UXGA resolution and higher JPEG quality
   //                      for larger pre-allocated frame buffer.
-  if(psramFound()){  //是否有PSRAM(Psuedo SRAM)記憶體IC
+  if(psramFound()){  //Whether there is PSRAM memory IC
     config.frame_size = FRAMESIZE_UXGA;
     config.jpeg_quality = 10;
     config.fb_count = 2;
@@ -191,14 +193,14 @@ void setup() {
     config.fb_count = 1;
   }
 
-  //視訊初始化
+  //Video initialization
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed with error 0x%x", err);
     ESP.restart();
   }
 
-  //可自訂視訊框架預設大小(解析度大小)
+  //Customizable default frame size
   sensor_t * s = esp_camera_sensor_get();
   // initial sensors are flipped vertically and colors are a bit saturated
   if (s->id.PID == OV3660_PID) {
@@ -231,7 +233,7 @@ void setup() {
   //WiFi.config(IPAddress(192, 168, 201, 100), IPAddress(192, 168, 201, 2), IPAddress(255, 255, 255, 0));
 
   for (int i=0;i<2;i++) {
-    WiFi.begin(ssid, password);    //執行網路連線
+    WiFi.begin(ssid, password);    //Start network connection
   
     delay(1000);
     Serial.println("");
@@ -241,11 +243,11 @@ void setup() {
     long int StartTime=millis();
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
-        if ((StartTime+5000) < millis()) break;    //等待10秒連線
+        if ((StartTime+5000) < millis()) break;    //Wait 10 seconds for connection
     } 
   
-    if (WiFi.status() == WL_CONNECTED) {    //若連線成功
-      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+    if (WiFi.status() == WL_CONNECTED) {    //If connection successful
+      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //Set SSID to show client IP         
       Serial.println("");
       Serial.println("STAIP address: ");
       Serial.println(WiFi.localIP());
@@ -261,7 +263,7 @@ void setup() {
     }
   } 
 
-  if (WiFi.status() != WL_CONNECTED) {    //若連線失敗
+  if (WiFi.status() != WL_CONNECTED) {    //If connection failed
     WiFi.softAP((WiFi.softAPIP().toString()+"_"+(String)apssid).c_str(), appassword);         
 
     for (int i=0;i<2;i++) {    //若連不上WIFI設定閃光燈慢速閃爍
@@ -281,7 +283,7 @@ void setup() {
   
   startCameraServer(); 
 
-  //設定閃光燈為低電位
+  //Set flash light to LOW
   pinMode(4, OUTPUT);
   digitalWrite(4, LOW); 
 }
@@ -437,7 +439,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       Serial.println("cmd= "+cmd+" ,P1= "+P1+" ,P2= "+P2+" ,P3= "+P3+" ,P4= "+P4+" ,P5= "+P5+" ,P6= "+P6+" ,P7= "+P7+" ,P8= "+P8+" ,P9= "+P9);
       Serial.println(""); 
           
-      //自訂指令區塊  http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
+      //Custom command block  http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
       if (cmd=="your cmd") {
         // You can do anything
         // Feedback="<font color=\"red\">Hello World</font>";
@@ -882,7 +884,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
       var link=location.origin+"/control?"+cmd+"="+P1+";"+P2+";"+P3+";"+P4+";"+P5;
     }
 
-    document.getElementById("ShowUrl").innerHTML="<font color=red>URL："+link+"</font>";
+    document.getElementById("ShowUrl").innerHTML="<font color=red>URL: "+link+"</font>";
     document.getElementById("MyFirmata").src=link;
     setTimeout(wait,1000);
   }
@@ -962,19 +964,19 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
         </td>
       </tr>
       <tr>
-      <td>P1：<input type="text" name="P1" id="P1" size="30" onclick="this.select()"></td>
+      <td>P1: <input type="text" name="P1" id="P1" size="30" onclick="this.select()"></td>
       </tr>
       <tr>
-      <td>P2：<input type="text" name="P2" id="P2" size="30" onclick="this.select()"></td>
+      <td>P2: <input type="text" name="P2" id="P2" size="30" onclick="this.select()"></td>
       </tr>
       <tr>
-      <td>P3：<input type="text" name="P3" id="P3" size="30" onclick="this.select()"></td>
+      <td>P3: <input type="text" name="P3" id="P3" size="30" onclick="this.select()"></td>
       </tr>
       <tr>
-      <td>P4：<input type="text" name="P4" id="P4" size="30" onclick="this.select()"></td>
+      <td>P4: <input type="text" name="P4" id="P4" size="30" onclick="this.select()"></td>
       </tr>
       <tr>
-      <td>P5：<input type="text" name="P5" id="P5" size="30" onclick="this.select()"></td>
+      <td>P5: <input type="text" name="P5" id="P5" size="30" onclick="this.select()"></td>
       </tr>
       <tr>
       <td align="center"><input type="reset" value="Clear" height="50">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" id="Send" value="Send" onclick="SendCommand();">&nbsp;&nbsp;&nbsp;</td>
@@ -982,7 +984,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
     </table>
   </form>
   <iframe id="MyFirmata" width="270" height="150"></iframe><br>
-  Command Format：<br>
+  Command Format: <br>
   http://APIP/control?cmd=P1;P2;P3;P4;P5<br>
   http://STAIP/?cmd=P1;P2;P3;P4;P5<br>
   <div id="ShowUrl"></div>

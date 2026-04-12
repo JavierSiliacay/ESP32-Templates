@@ -1,7 +1,9 @@
 /*
 ESP32-CAM Upload the image file to Google spreadsheet and Google drive
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2024-9-8 13:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Google spreadsheet
 https://docs.google.com/spreadsheets/u/0/

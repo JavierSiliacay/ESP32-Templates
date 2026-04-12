@@ -1,16 +1,18 @@
 /* 
 NodeMCU (ESP32) (Open in Chrome)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2019-08-24 11:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Command Format :  
 http://APIP/?cmd=str1;str2;str3;str4;str5;str6;str7;str8;str9
 http://STAIP/?cmd=str1;str2;str3;str4;str5;str6;str7;str8;str9
 
-Default APIP： 192.168.4.1
-STAIP：
-Query：http://192.168.4.1/?ip
-Link：http://192.168.4.1/?resetwifi=ssid;password
+Default APIP:  192.168.4.1
+STAIP: 
+Query: http://192.168.4.1/?ip
+Link: http://192.168.4.1/?resetwifi=ssid;password
 
 http://STAIP/?ip
 http://STAIP/?mac
@@ -48,13 +50,13 @@ void ExecuteCommand()
     // Feedback="<font color=\"red\">Hello World</font>";
   }
   else if (cmd=="speech") {
-    if (str1.indexOf("on")!=-1||str1.indexOf("開")!=-1) {    //Turn on the LED
+    if (str1.indexOf("on")!=-1||str1.indexOf("on")!=-1) {    //Turn on the LED
       ledcDetachPin(2);
       pinMode(2, OUTPUT);
       digitalWrite(2, 1);
       Feedback="<font color=\"red\">Turn on the LED</font>";
     }
-    else if (str1.indexOf("off")!=-1||str1.indexOf("關")!=-1) {    //Turn off the LED
+    else if (str1.indexOf("off")!=-1||str1.indexOf("off")!=-1) {    //Turn off the LED
       ledcDetachPin(2);
       pinMode(2, OUTPUT);
       digitalWrite(2, 0);

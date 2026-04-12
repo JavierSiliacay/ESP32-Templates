@@ -1,7 +1,9 @@
 /*
 Arduino Leonardo Keyes IR Remote Control for PPT
-Author:  ChungYi Fu (Kaohsiung, Taiwan)  2021-01-01 21:00 
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Library
 Ken Shirriff IRRemote v1.0
@@ -39,7 +41,7 @@ void setup()
   Serial.begin(9600);
   while (!Serial){}  
   Serial.println("Ready");
-  irrecv.blink13(true);     //收到訊號時，腳位13的LED會閃爍
+  irrecv.blink13(true);     //收到訊號時, 腳位13的LED會閃爍
   irrecv.enableIRIn();      //啟動紅外線解碼  
 }
 

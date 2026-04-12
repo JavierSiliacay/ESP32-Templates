@@ -1,7 +1,9 @@
-/*
+﻿/*
 ESP32 Weather of Taiwan
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2022-5-12 00:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 */
 
 #include <WiFi.h>
@@ -27,32 +29,32 @@ void loop()
   opendataWeather("高雄市", "rdec-key-123-45678-011121314");
 
   //getWeather(period, index)   period=0,1,2  index=0,1,2,3,4,5,6,7
-  Serial.println("位置= "+getWeather(0, 0));
-  Serial.println("開始時間= "+getWeather(0, 1));
-  Serial.println("結束時間= "+getWeather(0, 2));
-  Serial.println("天氣現象= "+getWeather(0, 3));
-  Serial.println("降雨機率= "+getWeather(0, 4)+" %");
-  Serial.println("最低氣溫= "+getWeather(0, 5)+" °C");
-  Serial.println("舒適度= "+getWeather(0, 6));
-  Serial.println("最高氣溫= "+getWeather(0, 7)+" °C");            
+  Serial.println("Location= "+getWeather(0, 0));
+  Serial.println("Start Time= "+getWeather(0, 1));
+  Serial.println("End Time= "+getWeather(0, 2));
+  Serial.println("Weather Phenomenon= "+getWeather(0, 3));
+  Serial.println("Probability of Precipitation= "+getWeather(0, 4)+" %");
+  Serial.println("Minimum Temperature= "+getWeather(0, 5)+" °C");
+  Serial.println("Comfort Level= "+getWeather(0, 6));
+  Serial.println("Maximum Temperature= "+getWeather(0, 7)+" °C");            
   Serial.println();
-  Serial.println("位置= "+getWeather(1, 0));
-  Serial.println("開始時間= "+getWeather(1, 1));
-  Serial.println("結束時間= "+getWeather(1, 2));
-  Serial.println("天氣現象= "+getWeather(1, 3));
-  Serial.println("降雨機率= "+getWeather(1, 4)+" %");
-  Serial.println("最低氣溫= "+getWeather(1, 5)+" °C");
-  Serial.println("舒適度= "+getWeather(1, 6));
-  Serial.println("最高氣溫= "+getWeather(1, 7)+" °C");            
+  Serial.println("Location= "+getWeather(1, 0));
+  Serial.println("Start Time= "+getWeather(1, 1));
+  Serial.println("End Time= "+getWeather(1, 2));
+  Serial.println("Weather Phenomenon= "+getWeather(1, 3));
+  Serial.println("Probability of Precipitation= "+getWeather(1, 4)+" %");
+  Serial.println("Minimum Temperature= "+getWeather(1, 5)+" °C");
+  Serial.println("Comfort Level= "+getWeather(1, 6));
+  Serial.println("Maximum Temperature= "+getWeather(1, 7)+" °C");            
   Serial.println();
-  Serial.println("位置= "+getWeather(2, 0));
-  Serial.println("開始時間= "+getWeather(2, 1));
-  Serial.println("結束時間= "+getWeather(2, 2));
-  Serial.println("天氣現象= "+getWeather(2, 3));
-  Serial.println("降雨機率= "+getWeather(2, 4)+" %");
-  Serial.println("最低氣溫= "+getWeather(2, 5)+" °C");
-  Serial.println("舒適度= "+getWeather(2, 6));
-  Serial.println("最高氣溫= "+getWeather(2, 7)+" °C");            
+  Serial.println("Location= "+getWeather(2, 0));
+  Serial.println("Start Time= "+getWeather(2, 1));
+  Serial.println("End Time= "+getWeather(2, 2));
+  Serial.println("Weather Phenomenon= "+getWeather(2, 3));
+  Serial.println("Probability of Precipitation= "+getWeather(2, 4)+" %");
+  Serial.println("Minimum Temperature= "+getWeather(2, 5)+" °C");
+  Serial.println("Comfort Level= "+getWeather(2, 6));
+  Serial.println("Maximum Temperature= "+getWeather(2, 7)+" °C");            
   Serial.println();    
   delay(60000);
 }

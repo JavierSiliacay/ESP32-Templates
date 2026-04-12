@@ -1,7 +1,9 @@
 /*
 ESP32 Google spreadsheet query by SQL statement
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2022-6-20 08:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Query Language Reference
 https://developers.google.com/chart/interactive/docs/querylanguage

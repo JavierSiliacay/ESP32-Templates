@@ -1,7 +1,9 @@
 /*
 ESP32-CAM Base64
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2019-8-14 21:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 */
 
 #include "soc/soc.h"

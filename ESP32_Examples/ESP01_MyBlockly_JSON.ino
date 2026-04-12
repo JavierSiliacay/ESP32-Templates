@@ -1,13 +1,15 @@
 /* 
 ESP01 MyBlockly
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2019-1-28 21:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Command Format :  
 http://APIP/?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 http://STAIP/?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 
-Default APIP： 192.168.4.1
+Default APIP:  192.168.4.1
 http://192.168.4.1/?ip
 http://192.168.4.1/?mac
 http://192.168.4.1/?restart
@@ -32,9 +34,9 @@ http://192.168.4.1/?i2cLcd=address;gpioSDA;gpioSCL;text1;text2
 --> address(Decimal) : 0x27=39, 0x3F=63   
 --> SDA->gpio0, SCL->gpio2
 
-STAIP：
-Query：http://192.168.4.1/?ip
-Link：http://192.168.4.1/?resetwifi=ssid;password
+STAIP: 
+Query: http://192.168.4.1/?ip
+Link: http://192.168.4.1/?resetwifi=ssid;password
 
 If you don't need to get response from ESP8266 and want to execute commands quickly, 
 you can append a parameter value "stop" at the end of command.

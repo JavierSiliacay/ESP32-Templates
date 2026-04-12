@@ -1,10 +1,12 @@
 /*
 ESP32 Using keyboard in Telegram Bot
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-1-11 21:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
 
-ArduinoJson Library：
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
+
+ArduinoJson Library: 
 https://github.com/bblanchon/ArduinoJson
 
 Telegram Bot API

@@ -1,4 +1,7 @@
-<!-- Author: https://www.facebook.com/francefu -->
+<!-- Author: Javier G. Siliacay (USTP-CDO) -->
+<!-- Facebook: https://www.facebook.com/siliacayjavier -->
+
+<!-- Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools. -->
 <!doctype html>
 <html>
 <head>
@@ -24,7 +27,7 @@ var P7=document.getElementById("P7").value;
 var P8=document.getElementById("P8").value;
 var P9=document.getElementById("P9").value;
 var link=url+"?"+cmd+"="+P1+";"+P2+";"+P3+";"+P4+";"+P5+";"+P6+";"+P7+";"+P8+";"+P9;
-document.getElementById("ShowUrl").innerHTML="<font color=red>URL："+link+"</font>";
+document.getElementById("ShowUrl").innerHTML="<font color=red>URL: "+link+"</font>";
 document.getElementById("MyFirmata").src=link;
 setTimeout(wait,1000);
 }
@@ -41,7 +44,7 @@ function wait()
   <td valign="top">
    <table width="350px">
     <tr><td>ESP01(+Arduino Leonardo), ESP12E, ESP32, WebBit, LinkIt7697, ESP32-CAM</td></tr>
-    <tr><td>IP：<input type="text" name="url" id="url" size="26" value="http://192.168.4.1"></td></tr>
+    <tr><td>IP: <input type="text" name="url" id="url" size="26" value="http://192.168.4.1"></td></tr>
     <tr><td>Command</td></tr>
     <tr>
     <td>
@@ -111,31 +114,31 @@ function wait()
     </td>
     </tr>
     <tr>
-    <td>P1：<input type="text" name="P1" id="P1" size="30" onclick="this.select()"></td>
+    <td>P1: <input type="text" name="P1" id="P1" size="30" onclick="this.select()"></td>
     </tr>
     <tr>
-    <td>P2：<input type="text" name="P2" id="P2" size="30" onclick="this.select()"></td>
+    <td>P2: <input type="text" name="P2" id="P2" size="30" onclick="this.select()"></td>
     </tr>
     <tr>
-    <td>P3：<input type="text" name="P3" id="P3" size="30" onclick="this.select()"></td>
+    <td>P3: <input type="text" name="P3" id="P3" size="30" onclick="this.select()"></td>
     </tr>
     <tr>
-    <td>P4：<input type="text" name="P4" id="P4" size="30" onclick="this.select()"></td>
+    <td>P4: <input type="text" name="P4" id="P4" size="30" onclick="this.select()"></td>
     </tr>
     <tr>
-    <td>P5：<input type="text" name="P5" id="P5" size="30" onclick="this.select()"></td>
+    <td>P5: <input type="text" name="P5" id="P5" size="30" onclick="this.select()"></td>
     </tr>
     <tr>
-    <td>P6：<input type="text" name="P6" id="P6" size="30" onclick="this.select()"></td>
+    <td>P6: <input type="text" name="P6" id="P6" size="30" onclick="this.select()"></td>
     </tr>
     <tr>
-    <td>P7：<input type="text" name="P7" id="P7" size="30" onclick="this.select()"></td>
+    <td>P7: <input type="text" name="P7" id="P7" size="30" onclick="this.select()"></td>
     </tr>
     <tr>
-    <td>P8：<input type="text" name="P8" id="P8" size="30" onclick="this.select()"></td>
+    <td>P8: <input type="text" name="P8" id="P8" size="30" onclick="this.select()"></td>
     </tr>
     <tr>
-    <td>P9：<input type="text" name="P9" id="P9" size="30" onclick="this.select()"></td>
+    <td>P9: <input type="text" name="P9" id="P9" size="30" onclick="this.select()"></td>
     </tr>
     <tr>
     <td align="center"><input type="reset" value="Clear" height="50">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" id="Send" value="Send" onclick="SendCommand();">&nbsp;&nbsp;&nbsp;</td>
@@ -144,7 +147,7 @@ function wait()
   </td>
   <td valign="top">
    <iframe id="MyFirmata" width="270" height="320"></iframe><br>
-   Command Format：<br>
+   Command Format: <br>
    http://APIP/?cmd=P1;P2;P3;P4;P5;P6;;P7;P8;P9<br>
    http://STAIP/?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
   </td>

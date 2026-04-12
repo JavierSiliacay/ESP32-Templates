@@ -1,7 +1,9 @@
 /*
 ESP32 AirQuality (Webbit)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-1-20 00:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 MbitBot Lite 8  - >  Webbit P16
 MbitBot Lite 9  - >  Webbit P17
@@ -41,7 +43,7 @@ Command Format :
 http://APIP/?cmd=p1;p2;p3;p4;p5;p6;p7;p8;p9
 http://STAIP/?cmd=p1;p2;p3;p4;p5;p6;p7;p8;p9
 
-Default APIP： 192.168.4.1
+Default APIP:  192.168.4.1
 
 http://192.168.4.1/?ip
 http://192.168.4.1/?mac
@@ -65,8 +67,8 @@ const char* password = "";  //WIFI pwd
 const char* apssid = "ESP32_AIRQUALITY";
 const char* appassword = "12345678";
 
-// Site Name (Chinese)  https://opendata.epa.gov.tw/Data/Contents/AQI/
-String Site = "小港";    //Opendata Site (Chinese)
+// Site Name (Traditional Chinese)  https://opendata.epa.gov.tw/Data/Contents/AQI/
+String Site = "小港";    //Opendata Site (Traditional Chinese)
 String SiteName = "Xiaogang";    //Display in LCD
 
 String line_token = "";  //Line Notify Token
@@ -380,11 +382,11 @@ void retrievepm25(){
  } 
  
   /*
-  obj["SiteName"].as<String>();             // "SiteName":"小港"
-  obj["County"].as<String>();               // "County":"高雄市"
+  obj["SiteName"].as<String>();             // "SiteName":"Xiaogang"
+  obj["County"].as<String>();               // "County":"Kaohsiung City"
   obj["AQI"].as<String>().toInt();          // "AQI":"86"
-  obj["Pollutant"].as<String>();            // "Pollutant":"細懸浮微粒"
-  obj["Status"].as<String>();               // "Status":"普通"
+  obj["Pollutant"].as<String>();            // "Pollutant":"Fine Particulate Matter (PM2.5)"
+  obj["Status"].as<String>();               // "Status":"Moderate"
   obj["SO2"].as<String>().toInt();          // "SO2":"4.2"
   obj["CO"].as<String>().toInt();           // "CO":"0.53"
   obj["CO_8hr"].as<String>().toInt();       // "CO_8hr":"0.5"

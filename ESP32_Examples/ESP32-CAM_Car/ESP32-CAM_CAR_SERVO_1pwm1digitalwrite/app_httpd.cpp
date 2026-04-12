@@ -1,7 +1,9 @@
 /*
 ESP32-CAM Remote Control Car 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2019-11-3 11:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Motor Driver IC (L9110S) -> PWM(gpio12, gpio13), digitalWrite(gpio14, gpio15)
 If I output PWM to GPIO 15 using ledcWrite, it will lose control. Why?

@@ -1,7 +1,9 @@
 /*
 ESP32-CAM Upload a captured photo to Google Drive and send the uploaded image link to Line Notify or Line Bot.
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2024-11-4 20:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Google Apps Script
 https://github.com/fustyles/webduino/blob/gs/SendCapturedImageToGoogleDriveAndLinenotify_doPost.gs

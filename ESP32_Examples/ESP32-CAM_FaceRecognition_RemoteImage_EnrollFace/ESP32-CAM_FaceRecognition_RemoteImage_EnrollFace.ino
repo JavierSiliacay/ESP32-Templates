@@ -1,7 +1,9 @@
 /*
 ESP32-CAM Enroll faces by getting remote images from web server and recognize faces automatically.
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-6-29 21:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Arduino ESP32 version 1.0.6
 */
@@ -34,13 +36,13 @@ int image_height = 296;
 #include <WiFiClientSecure.h>
 #include <SPIFFS.h>    //SPIFFS存取函式庫
 #include <FS.h>        //檔案存取函式庫
-#include "soc/soc.h"             //用於電源不穩不重開機 
-#include "soc/rtc_cntl_reg.h"    //用於電源不穩不重開機 
-#include "esp_camera.h"          //視訊函式
+#include "soc/soc.h"             //For power instability non-reset 
+#include "soc/rtc_cntl_reg.h"    //For power instability non-reset 
+#include "esp_camera.h"          //Video functions
 #include "img_converters.h"      //影像格式轉換函式
 #include "fb_gfx.h"              //影像繪圖函式
-#include "fd_forward.h"          //人臉偵測函式
-#include "fr_forward.h"          //人臉辨識函式
+#include "fd_forward.h"          //Face detection functions
+#include "fr_forward.h"          //Face recognition functions
 
 //安信可ESP32-CAM模組腳位設定
 #define PWDN_GPIO_NUM     32
@@ -90,13 +92,13 @@ void FaceNoMatched() {  //辨識到陌生人臉
 }
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
     
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  //Enable debug output
   Serial.println();
 
-  //視訊組態設定  https://github.com/espressif/esp32-camera/blob/master/driver/include/esp_camera.h
+  //Video configuration settings  https://github.com/espressif/esp32-camera/blob/master/driver/include/esp_camera.h
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -126,7 +128,7 @@ void setup() {
   //   
   // if PSRAM IC present, init with UXGA resolution and higher JPEG quality
   //                      for larger pre-allocated frame buffer.
-  if(psramFound()){  //是否有PSRAM(Psuedo SRAM)記憶體IC
+  if(psramFound()){  //Whether there is PSRAM memory IC
     config.frame_size = FRAMESIZE_UXGA;
     config.jpeg_quality = 10;
     config.fb_count = 2;
@@ -136,14 +138,14 @@ void setup() {
     config.fb_count = 1;
   }
 
-  //視訊初始化
+  //Video initialization
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed with error 0x%x", err);
     ESP.restart();
   }
 
-  //可自訂視訊框架預設大小(解析度大小)
+  //Customizable default frame size
   sensor_t * s = esp_camera_sensor_get();
   // initial sensors are flipped vertically and colors are a bit saturated
   if (s->id.PID == OV3660_PID) {
@@ -152,10 +154,10 @@ void setup() {
     s->set_saturation(s, -2); // lower the saturation
   }
   // drop down frame size for higher initial frame rate
-  s->set_framesize(s, FRAMESIZE_CIF);    //解析度 UXGA(1600x1200), SXGA(1280x1024), XGA(1024x768), SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
+  s->set_framesize(s, FRAMESIZE_CIF);    //Resolution UXGA(1600x1200), SXGA(1280x1024), XGA(1024x768), SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
 
-  //s->set_vflip(s, 1);  //垂直翻轉
-  //s->set_hmirror(s, 1);  //水平鏡像
+  //s->set_vflip(s, 1);  //Vertical flip
+  //s->set_hmirror(s, 1);  //Horizontal mirror
 
   //閃光燈(GPIO4)
   ledcAttachPin(4, 4);  
@@ -167,7 +169,7 @@ void setup() {
 
 
   for (int i=0;i<2;i++) {
-    WiFi.begin(ssid, password);    //執行網路連線
+    WiFi.begin(ssid, password);    //Start network connection
   
     delay(1000);
     Serial.println("");
@@ -177,11 +179,11 @@ void setup() {
     long int StartTime=millis();
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
-        if ((StartTime+5000) < millis()) break;    //等待10秒連線
+        if ((StartTime+5000) < millis()) break;    //Wait 10 seconds for connection
     } 
   
-    if (WiFi.status() == WL_CONNECTED) {    //若連線成功
-      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+    if (WiFi.status() == WL_CONNECTED) {    //If connection successful
+      WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //Set SSID to show client IP         
       Serial.println("");
       Serial.println("STAIP address: ");
       Serial.println(WiFi.localIP());
@@ -198,7 +200,7 @@ void setup() {
     }
   }
 
-  if (WiFi.status() != WL_CONNECTED) {    //若連線失敗
+  if (WiFi.status() != WL_CONNECTED) {    //If connection failed
     ESP.restart();
   }    
   
@@ -253,7 +255,7 @@ void enrollImageRemote() {  //取得遠端照片註冊人臉
   String request = "";
   int port = 443;
       
-  //取得雲端照片註冊人臉，有時會讀取失敗，需要自行加條件判斷是否已完成註冊或重啟電源重新讀取。
+  //取得雲端照片註冊人臉, 有時會讀取失敗, 需要自行加條件判斷是否已完成註冊或重啟電源重新讀取。
   int len = sizeof(imageDomain)/sizeof(*imageDomain);
   if (len>0) {
     for (int i=0;i<len;i++) {
@@ -319,17 +321,17 @@ void enrollImageRemote() {  //取得遠端照片註冊人臉
           int8_t left_sample_face = NULL;
           dl_matrix3du_t *image_matrix = NULL;
           
-          image_matrix = dl_matrix3du_alloc(1, image_width, image_height, 3);  //分配內部記憶體
+          image_matrix = dl_matrix3du_alloc(1, image_width, image_height, 3);  //Allocate internal memory
           if (!image_matrix) {
               Serial.println("dl_matrix3du_alloc failed");
           } else { 
-              fmt2rgb888((uint8_t*)buf, file.size(), PIXFORMAT_JPEG, image_matrix->item);  //影像格式轉換RGB格式
+              fmt2rgb888((uint8_t*)buf, file.size(), PIXFORMAT_JPEG, image_matrix->item);  //Image format converted to RGB
         
-              box_array_t *net_boxes = face_detect(image_matrix, &mtmn_config);  //執行人臉偵測取得臉框數據
+              box_array_t *net_boxes = face_detect(image_matrix, &mtmn_config);  //Perform face detection
               if (net_boxes){
-                Serial.println("faces = " + String(net_boxes->len));  //偵測到的人臉數
+                Serial.println("faces = " + String(net_boxes->len));  //Number of detected faces
                 Serial.println();
-                for (int i = 0; i < net_boxes->len; i++){  //列舉人臉位置與大小
+                for (int i = 0; i < net_boxes->len; i++){  //List face position and size
                     Serial.println("index = " + String(i));
                     int x = (int)net_boxes->box[i].box_p[0];
                     Serial.println("x = " + String(x));
@@ -425,7 +427,7 @@ void faceRecognition() {
   dl_matrix3du_free(image_matrix);
 }
 
-//人臉辨識函式
+//Face recognition functions
 static int run_face_recognition(dl_matrix3du_t *image_matrix, box_array_t *net_boxes){  
     dl_matrix3du_t *aligned_face = NULL;
     int matched_id = 0;
@@ -454,7 +456,7 @@ static int run_face_recognition(dl_matrix3du_t *image_matrix, box_array_t *net_b
             matched_id = -1;
             FaceNoMatched();  //辨識為陌生人臉執行指令控制
         }
-    } else {  //若偵測出人臉，但無法進行識別
+    } else {  //若偵測出人臉, 但無法進行識別
         Serial.println("Face Not Aligned");
         Serial.println();
     }

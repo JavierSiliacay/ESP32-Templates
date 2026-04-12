@@ -1,7 +1,9 @@
 /*
 ESP32 NTP SERVER
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2022-5-17 21:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 */
 
 const char* ssid = "teacher";

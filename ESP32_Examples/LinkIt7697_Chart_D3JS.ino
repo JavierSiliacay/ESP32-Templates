@@ -1,7 +1,9 @@
 /* 
 LinkIt7697 (D3JS Chart)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2019-10-28 19:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Command Format :  
 http://STAIP   (default:LineChart)

@@ -1,7 +1,9 @@
 /*
 OTTO ROBOT 20161204
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-7-29 00:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Libraries: https://github.com/fustyles/Arduino/tree/master/ESP32-CAM_OTTO/OttoDIY/libraries
 

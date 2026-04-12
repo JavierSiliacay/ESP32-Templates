@@ -1,6 +1,6 @@
 /*
 https://www.thaieasyelec.com/article-wiki/embedded-electronics-application/espino32camintroduction
-Library： https://github.com/ThaiEasyElec/ESPIno32CAM
+Library:  https://github.com/ThaiEasyElec/ESPIno32CAM
 
 
 You must modify the file "ESPino32CAM.h" of the library.

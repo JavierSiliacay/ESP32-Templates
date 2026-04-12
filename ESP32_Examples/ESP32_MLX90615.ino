@@ -1,7 +1,9 @@
 /* 
 ESP32、ESP12E (or LinkIt7697) reads out the MLX90615 or MLX90614 infrared thermometer
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2020-4-7 19:20
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Library: https://github.com/felias-fogg/SlowSoftI2CMaster
 

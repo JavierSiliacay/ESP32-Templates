@@ -1,7 +1,9 @@
 /*
 ESP32 PMS5003T
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-1-21 19:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Get sensor values
 http://192.168.4.1
@@ -42,7 +44,7 @@ Command Format :
 http://APIP/?cmd=p1;p2;p3;p4;p5;p6;p7;p8;p9
 http://STAIP/?cmd=p1;p2;p3;p4;p5;p6;p7;p8;p9
 
-Default APIP： 192.168.4.1
+Default APIP:  192.168.4.1
 
 http://192.168.4.1/?ip
 http://192.168.4.1/?mac

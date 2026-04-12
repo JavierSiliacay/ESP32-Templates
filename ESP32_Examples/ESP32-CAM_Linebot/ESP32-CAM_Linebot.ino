@@ -1,7 +1,9 @@
 /*
 ESP32-CAM (Upload DHT11 values and stills to spreadsheet and query on Line Bot)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2022-4-4 23:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Line Bot gs code (Google Apps Script)
 ESP32-CAM Line Bot

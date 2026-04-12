@@ -1,36 +1,38 @@
 /*
 ESP32-CAM Load images from SD card to enroll faces and recognize faces automatically.
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-6-29 21:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Arduino ESP32 version 1.0.6
 */
 
-//人臉辨識同一人人臉註冊影像數
+// Number of face registration images for the same person in face recognition
 #define ENROLL_CONFIRM_TIMES 5
 
-//人臉辨識註冊人數
+// Number of registered persons in face recognition
 #define FACE_ID_SAVE_NUMBER 7
 
-//可由網頁get-still按鈕取得解析度CIF影像另存於SD卡 http://192.168.xxx.xxx/capture  (FRAMESIZE_CIF)
+// You can get the CIF resolution image from the webpage get-still button and save it to the SD card http://192.168.xxx.xxx/capture  (FRAMESIZE_CIF)
 String filepath[5] = {"/1.jpg", "/2.jpg", "/3.jpg", "/4.jpg", "/5.jpg"};  //1.jpg, 2.jpg, ...., 35.jpg
 int image_width = 400;  
 int image_height = 296;
 
-//設定人臉辨識顯示的人名
+// Set the names displayed in face recognition
 String recognize_face_matched_name[7] = {"Name0","Name1","Name2","Name3","Name4","Name5","Name6"};
 
-#include "soc/soc.h"             //用於電源不穩不重開機 
-#include "soc/rtc_cntl_reg.h"    //用於電源不穩不重開機 
-#include "esp_camera.h"          //視訊函式
-#include "img_converters.h"      //影像格式轉換函式
-#include "fb_gfx.h"              //影像繪圖函式
-#include "fd_forward.h"          //人臉偵測函式
-#include "fr_forward.h"          //人臉辨識函式
-#include "FS.h"                  //檔案系統函式
-#include "SD_MMC.h"              //SD卡存取函式
+#include "soc/soc.h"             // Used for power instability without restarting 
+#include "soc/rtc_cntl_reg.h"    // Used for power instability without restarting 
+#include "esp_camera.h"          // Video functions
+#include "img_converters.h"      // Image format conversion functions
+#include "fb_gfx.h"              // Image drawing functions
+#include "fd_forward.h"          // Face detection functions
+#include "fr_forward.h"          // Face recognition functions
+#include "FS.h"                  // File system functions
+#include "SD_MMC.h"              // SD card access functions
 
-//安信可ESP32-CAM模組腳位設定
+// AI-Thinker ESP32-CAM module pin settings
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM      0
@@ -49,7 +51,7 @@ String recognize_face_matched_name[7] = {"Name0","Name1","Name2","Name3","Name4"
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
-//初始值
+// Initial values
 static mtmn_config_t mtmn_config = {0};
 static face_id_list id_list = {0};
 int8_t enroll_id = 0;
@@ -57,7 +59,7 @@ int8_t enroll_id = 0;
 //https://github.com/espressif/esp-dl/blob/master/face_detection/README.md
 box_array_t *net_boxes = NULL;
 
-void FaceMatched(int faceid) {  //辨識到註冊人臉執行指令控制
+void FaceMatched(int faceid) {  // Execute command control when registered face is recognized
   if (faceid==0) {  
   } 
   else if (faceid==1) { 
@@ -76,18 +78,18 @@ void FaceMatched(int faceid) {  //辨識到註冊人臉執行指令控制
   }   
 }
 
-void FaceNoMatched() {  //辨識為陌生人臉執行指令控制
+void FaceNoMatched() {  // Execute command control when unrecognized face is detected
   
 }
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  // Disable the restart setting for brownout/power instability
     
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  // Enable diagnostic output
   Serial.println();
 
-  //視訊組態設定  https://github.com/espressif/esp32-camera/blob/master/driver/include/esp_camera.h
+  // Video configuration settings  https://github.com/espressif/esp32-camera/blob/master/driver/include/esp_camera.h
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -117,7 +119,7 @@ void setup() {
   //   
   // if PSRAM IC present, init with UXGA resolution and higher JPEG quality
   //                      for larger pre-allocated frame buffer.
-  if(psramFound()){  //是否有PSRAM(Psuedo SRAM)記憶體IC
+  if(psramFound()){  // Whether there is PSRAM (Psuedo SRAM) memory IC
     config.frame_size = FRAMESIZE_UXGA;
     config.jpeg_quality = 10;
     config.fb_count = 2;
@@ -127,14 +129,14 @@ void setup() {
     config.fb_count = 1;
   }
 
-  //視訊初始化
+  // Video initialization
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed with error 0x%x", err);
     ESP.restart();
   }
 
-  //可自訂視訊框架預設大小(解析度大小)
+  // Customizable video frame default size (resolution size)
   sensor_t * s = esp_camera_sensor_get();
   // initial sensors are flipped vertically and colors are a bit saturated
   if (s->id.PID == OV3660_PID) {
@@ -143,18 +145,18 @@ void setup() {
     s->set_saturation(s, -2); // lower the saturation
   }
   // drop down frame size for higher initial frame rate
-  s->set_framesize(s, FRAMESIZE_CIF);    //解析度 UXGA(1600x1200), SXGA(1280x1024), XGA(1024x768), SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
+  s->set_framesize(s, FRAMESIZE_CIF);    // Resolution UXGA(1600x1200), SXGA(1280x1024), XGA(1024x768), SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
 
-  //s->set_vflip(s, 1);  //垂直翻轉
-  //s->set_hmirror(s, 1);  //水平鏡像
+  //s->set_vflip(s, 1);  // Vertical flip
+  //s->set_hmirror(s, 1);  // Horizontal mirror
 
-  //閃光燈(GPIO4)
+  // Flashlight (GPIO4)
   ledcAttachPin(4, 4);  
   ledcSetup(4, 5000, 8);
   pinMode(4, OUTPUT);
   digitalWrite(4, LOW);
 
-  encrollImageSD();  //讀取SD卡圖檔註冊人臉
+  encrollImageSD();  // Read image files from SD card to register faces
 }
 
 void loop() {
@@ -163,7 +165,7 @@ void loop() {
 }
 
 void encrollImageSD() {
-  //臉部偵測參數設定  https://github.com/espressif/esp-face/blob/master/face_detection/README.md
+  // Face detection parameter settings  https://github.com/espressif/esp-face/blob/master/face_detection/README.md
   mtmn_config.type = FAST;  //FAST or NORMAL
   mtmn_config.min_face = 80;
   mtmn_config.pyramid = 0.707;
@@ -178,7 +180,7 @@ void encrollImageSD() {
   mtmn_config.o_threshold.nms = 0.7;
   mtmn_config.o_threshold.candidate_number = 1;
     
-  //SD卡初始化
+  // SD card initialization
   if(!SD_MMC.begin()){
     Serial.println("Card Mount Failed");
     ESP.restart();
@@ -207,16 +209,16 @@ void encrollImageSD() {
         i++;  
       }
   
-      image_matrix = dl_matrix3du_alloc(1, image_width, image_height, 3);  //分配內部記憶體
+      image_matrix = dl_matrix3du_alloc(1, image_width, image_height, 3);  // Allocate internal memory
       if (!image_matrix) {
           Serial.println("dl_matrix3du_alloc failed");
       } else {          
-          fmt2rgb888((uint8_t*)buf, file.size(), PIXFORMAT_JPEG, image_matrix->item);  //影像格式轉換RGB格式
-          box_array_t *net_boxes = face_detect(image_matrix, &mtmn_config);  //執行人臉偵測取得臉框數據
+          fmt2rgb888((uint8_t*)buf, file.size(), PIXFORMAT_JPEG, image_matrix->item);  // Image format conversion to RGB format
+          box_array_t *net_boxes = face_detect(image_matrix, &mtmn_config);  // Execute face detection to obtain face box data
           if (net_boxes){
-            Serial.println("faces = " + String(net_boxes->len));  //偵測到的人臉數
+            Serial.println("faces = " + String(net_boxes->len));  // Number of detected faces
             Serial.println();
-            for (int i = 0; i < net_boxes->len; i++){  //列舉人臉位置與大小
+            for (int i = 0; i < net_boxes->len; i++){  // List face position and size
                 Serial.println("index = " + String(i));
                 int x = (int)net_boxes->box[i].box_p[0];
                 Serial.println("x = " + String(x));
@@ -228,7 +230,7 @@ void encrollImageSD() {
                 Serial.println("height = " + String(h));
                 Serial.println();
 
-                //註冊人臉
+                // Register face
                 if (i==0) {
                   aligned_face = dl_matrix3du_alloc(1, FACE_WIDTH, FACE_HEIGHT, 3);
                   if (align_face(net_boxes, image_matrix, aligned_face) == ESP_OK){
@@ -260,7 +262,7 @@ void encrollImageSD() {
             net_boxes = NULL;
           }
           else {
-            Serial.println("No Face");    //未偵測到人臉
+            Serial.println("No Face");    // No face detected
             Serial.println();
           }
           dl_matrix3du_free(image_matrix);
@@ -304,9 +306,9 @@ void faceRecognition() {
       Serial.println("to rgb888 failed");
       return;
   }
-  box_array_t *net_boxes = face_detect(image_matrix, &mtmn_config);  //執行人臉偵測
+  box_array_t *net_boxes = face_detect(image_matrix, &mtmn_config);  // Execute face detection
   if (net_boxes){
-      run_face_recognition(image_matrix, net_boxes);  //執行人臉辨識
+      run_face_recognition(image_matrix, net_boxes);  // Execute face recognition
       dl_lib_free(net_boxes->score);
       dl_lib_free(net_boxes->box);
       dl_lib_free(net_boxes->landmark);
@@ -316,7 +318,7 @@ void faceRecognition() {
   dl_matrix3du_free(image_matrix);
 }
 
-//人臉辨識函式
+// Face recognition function
 static int run_face_recognition(dl_matrix3du_t *image_matrix, box_array_t *net_boxes){  
     dl_matrix3du_t *aligned_face = NULL;
     int matched_id = 0;
@@ -327,24 +329,24 @@ static int run_face_recognition(dl_matrix3du_t *image_matrix, box_array_t *net_b
         return matched_id;
     }
     if (align_face(net_boxes, image_matrix, aligned_face) == ESP_OK){
-        matched_id = recognize_face(&id_list, aligned_face);  //人臉辨識
+        matched_id = recognize_face(&id_list, aligned_face);  // Face recognition
         if (matched_id >= 0) {
             Serial.printf("Match Face ID: %u\n", matched_id);
             int name_length = sizeof(recognize_face_matched_name) / sizeof(recognize_face_matched_name[0]);
             if (matched_id<name_length) {
-              //視訊畫面中顯示辨識到的人名
+              // Display recognized person's name on video screen
               Serial.printf("Match Face Name: %s\n", recognize_face_matched_name[matched_id]);
             }
             else {
               Serial.printf("Match Face Name: No name");
             }  
             Serial.println();
-            FaceMatched(matched_id);  //辨識到註冊人臉執行指令控制
+            FaceMatched(matched_id);  // Execute command control when registered face is recognized
         } else {
-            Serial.println("No Match Found");  //辨識為陌生人臉
+            Serial.println("No Match Found");  // Recognized as unfamiliar face
             Serial.println();
             matched_id = -1;
-            FaceNoMatched();  //辨識為陌生人臉執行指令控制
+            FaceNoMatched();  // Execute command control when unrecognized face is detected
         }
     } else {
         Serial.println("Face Not Aligned");

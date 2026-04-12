@@ -635,7 +635,7 @@
               streamButton.innerHTML = 'Stop Stream'
             }
 
-            //新增重啟電源按鈕點選事件 (自訂指令格式：http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9)
+            //新增重啟電源按鈕點選事件 (自訂指令格式: http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9)
             restartButton.onclick = () => {
               fetch(baseHost+"/control?restart");
             }            
@@ -928,7 +928,7 @@
 			
 		});
 		
-		if (event.data.length==0&&motorState.checked) {  //若畫面中完全偵測不到線，則依前一動作反向轉動。
+		if (event.data.length==0&&motorState.checked) {  //若畫面中完全偵測不到線, 則依前一動作反向轉動。
 			if (lastDirection = "right")
 				car('/control?car=6;' + turnDelayMin.value);
 			else if (lastDirection = "left")

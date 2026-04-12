@@ -1,6 +1,8 @@
 /*
-  Author : ChungYi Fu (Kaohsiung, Taiwan)  Modified: 2021-6-19 00:00
-  https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
   Refer to the code. (ESP32-arduino core version 1.06)
   https://github.com/jameszah/ESP32-CAM-Video-Recorder-junior/blob/master/ESP32-CAM-Video-Recorder-junior-50x-lpmod.ino
@@ -10,9 +12,9 @@
   https://fustyles.github.io/webduino/CautionArea/ESP32-CAM-Video-Recorder-junior_en_Page.html   (English)
   https://fustyles.github.io/webduino/CautionArea/ESP32-CAM-Video-Recorder-junior-Page.html   (Traditional Chinese)
   You must change Chrome settings to allow "insecure content".
-  URL： chrome://settings/content/siteDetails?site=https://fustyles.github.io
+  URL:  chrome://settings/content/siteDetails?site=https://fustyles.github.io
 
-  Chrome瀏覽器設定須更改：允許開啟不安全內容。否則http未加密連結會被阻擋無法串流！若將網頁下載到本機執行，則不用更改安全性設定。
+  Chrome瀏覽器設定須更改: 允許開啟不安全內容。否則http未加密連結會被阻擋無法串流！若將網頁下載到本機執行, 則不用更改安全性設定。
 
 
   Url Command
@@ -105,17 +107,17 @@ const char* password = "*****";     //Wi-Fi password
 const char* apssid = "Recorder";
 const char* appassword = "12345678";   //AP password require at least 8 characters.
 
-String devstr =  "classroom1_";            //檔名
-boolean recordOnce = false;            //false: 分段連續錄影  true：錄完一段後即停止
-boolean resetfilegroup = false;        //重設檔名群組流水號狀態值
+String devstr =  "classroom1_";            //Filename
+boolean recordOnce = false;            //false: Continuous segmented recording  true: Stop after one segment
+boolean resetfilegroup = false;        //Reset file group serial number status value
 
-int avi_length = 180;                  // 設定錄影時間長度(秒) how long a movie in seconds
-int framesize = FRAMESIZE_CIF;        // 設定影像解析度 UXGA(1600x1200)|SXGA(1280x1024)|XGA(1024x768)|SVGA(800x600)|VGA(640x480)|CIF(400x296)|QVGA(320x240)|HQVGA(240x176)|QQVGA(160x120)  
-int quality = 10;                      // 設定影像品質，值越小品質越高 10 ~ 63 
+int avi_length = 180;                  // Set recording length (seconds) how long a movie in seconds
+int framesize = FRAMESIZE_CIF;        // Set image resolution UXGA(1600x1200)|SXGA(1280x1024)|XGA(1024x768)|SVGA(800x600)|VGA(640x480)|CIF(400x296)|QVGA(320x240)|HQVGA(240x176)|QQVGA(160x120)  
+int quality = 10;                      // Set image quality, lower value means higher quality 10 ~ 63 
 
-String Feedback="",recordMessage="";   //回傳客戶端訊息
-String Command="",cmd="",P1="",P2="",P3="",P4="",P5="",P6="",P7="",P8="",P9="";  //指令參數值
-byte ReceiveState=0,cmdState=1,strState=1,questionstate=0,equalstate=0,semicolonstate=0;  //指令拆解狀態值
+String Feedback="",recordMessage="";   //Returned client messages
+String Command="",cmd="",P1="",P2="",P3="",P4="",P5="",P6="",P7="",P8="",P9="";  //Command parameter values
+byte ReceiveState=0,cmdState=1,strState=1,questionstate=0,equalstate=0,semicolonstate=0;  //Command parsing status values
 
 static const char vernum[] = "v50lpmod";
 char devname[30];
@@ -1429,12 +1431,12 @@ String DeleteFile(String filename) {
   return message;
 }
 
-//指令參數控制
+//Command parameter control
 static esp_err_t cmd_handler(httpd_req_t *req){
-    char*  buf;  //存取網址後帶的參數字串
+    char*  buf;  //Access point for parameter strings in URL
     size_t buf_len;
-    char variable[128] = {0,};  //存取參數var值
-    char value[128] = {0,};  //存取參數val值
+    char variable[128] = {0,};  //Stores 'var' parameter value
+    char value[128] = {0,};  //Stores 'val' parameter value
     String myCmd = "";
 
     buf_len = httpd_req_get_url_query_len(req) + 1;
@@ -1461,9 +1463,9 @@ static esp_err_t cmd_handler(httpd_req_t *req){
     Feedback="";Command="";cmd="";P1="";P2="";P3="";P4="";P5="";P6="";P7="";P8="";P9="";
     ReceiveState=0,cmdState=1,strState=1,questionstate=0,equalstate=0,semicolonstate=0;     
     if (myCmd.length()>0) {
-      myCmd = "?"+myCmd;  //網址後帶的參數字串轉換成自訂參數格式
+      myCmd = "?"+myCmd;  //Convert URL parameter strings to custom parameter format
       for (int i=0;i<myCmd.length();i++) {
-        getCommand(char(myCmd.charAt(i)));  //拆解參數字串
+        getCommand(char(myCmd.charAt(i)));  //Decompose parameter string
       }
     }
 
@@ -1473,7 +1475,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       //Serial.println("cmd= "+cmd+" ,P1= "+P1+" ,P2= "+P2+" ,P3= "+P3+" ,P4= "+P4+" ,P5= "+P5+" ,P6= "+P6+" ,P7= "+P7+" ,P8= "+P8+" ,P9= "+P9);
       //Serial.println(""); 
 
-      //自訂指令區塊  http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
+      //Custom command block  http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
       if (cmd=="record") {
           Serial.println("");
           Serial.println("Start recording");
@@ -1504,8 +1506,8 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       }
     
       const char *resp = Feedback.c_str();
-      httpd_resp_set_type(req, "text/html");  //設定回傳資料格式
-      httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");  //允許跨網域讀取
+      httpd_resp_set_type(req, "text/html");  //Set response data format
+      httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");  //Allow cross-domain access
       return httpd_resp_send(req, resp, strlen(resp));    
     } 
     else {
@@ -1555,7 +1557,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
         const char *resp = Feedback.c_str();
         httpd_resp_set_type(req, "text/html");
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-        return httpd_resp_send(req, resp, strlen(resp));  //回傳參數字串
+        return httpd_resp_send(req, resp, strlen(resp));  //Return parameter string
       }
       else {
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
@@ -1754,7 +1756,7 @@ void startCameraServer() {
   Serial.println("");
   Serial.printf("Starting web server on port: '%d'\n", config.server_port);  //Server Port
   if (httpd_start(&camera_httpd, &config) == ESP_OK) {
-      //註冊自訂網址路徑對應執行的函式
+      //Register custom URL path handlers
     httpd_register_uri_handler(camera_httpd, &index_uri);
     httpd_register_uri_handler(camera_httpd, &capture_uri);
     httpd_register_uri_handler(camera_httpd, &stream_uri);
@@ -1778,10 +1780,10 @@ void stopCameraServer() {
 }
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
   
   Serial.begin(115200);
-  //Serial.setDebugOutput(true);  //開啟診斷輸出
+  //Serial.setDebugOutput(true);  //Enable debug output
   Serial.println();
 
   pinMode(33, OUTPUT);             // little red led on back of chip
@@ -1795,7 +1797,7 @@ void setup() {
   //指定Client端靜態IP
   //WiFi.config(IPAddress(192, 168, 201, 100), IPAddress(192, 168, 201, 2), IPAddress(255, 255, 255, 0));
 
-  WiFi.begin(ssid, password);    //執行網路連線
+  WiFi.begin(ssid, password);    //Start network connection
 
   delay(1000);
   Serial.println("");
@@ -1806,22 +1808,22 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) 
   {
       delay(500);
-      if ((StartTime+5000) < millis()) break;    //等待3秒連線
+      if ((StartTime+5000) < millis()) break;    //Wait 5 seconds for connection
   }
 
   if (WiFi.status() != WL_CONNECTED) {
-    WiFi.begin(ssid, password);    //執行網路連線
+    WiFi.begin(ssid, password);    //Start network connection
     
     StartTime=millis();
     while (WiFi.status() != WL_CONNECTED) 
     {
         delay(500);
-        if ((StartTime+5000) < millis()) break;    //等待3秒連線
+        if ((StartTime+5000) < millis()) break;    //Wait 5 seconds for connection
     } 
   }   
 
-  if (WiFi.status() == WL_CONNECTED) {    //若連線成功
-    WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+  if (WiFi.status() == WL_CONNECTED) {    //If connection successful
+    WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //Set SSID to show client IP
     Serial.println("");
     Serial.println("STAIP address: ");
     Serial.println(WiFi.localIP());   
@@ -2111,7 +2113,7 @@ void loop() {
   delay(200);
 }
 
-//拆解命令字串置入變數
+//Decompose command string and put into variables
 void getCommand(char c)
 {
   if (c=='?') ReceiveState=1;

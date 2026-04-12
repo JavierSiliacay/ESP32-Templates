@@ -1,8 +1,10 @@
 /* 
 ESP-01 Electric Fan (with Arduino Uno)
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2018-08-05 22:00 
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 SoftwareSerial -> TX(gpio2)->D6, RX(gpio0)->D7
 
@@ -13,12 +15,15 @@ http://STAIP/?cmd=str1;str2;str3;str4;str5;str6;str7;str8;str9
 Default APIP: 
 http://192.168.4.1
 
-STAIP：
+STAIP: 
 http://192.168.4.1/?resetwifi=ssid;password
 
 Expanding Arduino Serial Port Buffer Size
 https://internetofhomethings.com/homethings/?p=927
-https://www.facebook.com/francefu/videos/10211231615856099/
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 */
 
 #include <SoftwareSerial.h>

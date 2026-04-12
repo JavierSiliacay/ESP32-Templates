@@ -1,8 +1,10 @@
 /* 
 Arduino Leonardo (keyboard,mouse) + ESP-01 (AT Command)
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2018-08-27 22:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Page
 https://github.com/fustyles/Arduino/blob/master/ESP8266_MyFirmata.html
@@ -39,11 +41,11 @@ http://192.168.4.1/?keyboardprint=str1
 http://192.168.4.1/?keyboardprintln=str1
 http://192.168.4.1/?keyboardwrite=keycode
 
-Default APIP： 192.168.4.1
+Default APIP:  192.168.4.1
 
-STAIP：
-Query： http://192.168.4.1/?ip
-Link：http://192.168.4.1/?resetwifi=ssid;password
+STAIP: 
+Query:  http://192.168.4.1/?ip
+Link: http://192.168.4.1/?resetwifi=ssid;password
 
 Control Page (http)
 Source
@@ -53,7 +55,10 @@ https://fustyles.github.io/webduino/ESP8266_MyFirmata.html
 
 Expanding Arduino Serial Port Buffer Size
 https://internetofhomethings.com/homethings/?p=927
-https://www.facebook.com/francefu/videos/10211231615856099/
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 */
 
 #include <SoftwareSerial.h>

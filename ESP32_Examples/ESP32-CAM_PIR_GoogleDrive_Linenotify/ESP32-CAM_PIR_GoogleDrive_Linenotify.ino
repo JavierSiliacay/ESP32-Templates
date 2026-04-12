@@ -1,7 +1,9 @@
 /*
 ESP32-CAM PIR Motion Sensor (Save a captured image to Google Drive and LineNotify)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2020-1-18 16:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 PIR Motion Sensor -> GND, gpio13, 3.3V
 

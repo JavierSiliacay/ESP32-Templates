@@ -1,8 +1,10 @@
 /*
 ESP32-CAM CameraWebServer (No face detection)
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2022-8-20 11:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Face recognition works well in v1.0.6.
 
@@ -24,7 +26,7 @@ http://192.168.xxx.xxx/resolution?sx=start_x&sy=start_y&ex=end_x&ey=end_y&offx=o
 自訂指令格式  http://192.168.xxx.xxx/control?cmd=p1;p2;p3;p4;p5;p6;p7;p8;p9
 
 http://192.168.xxx.xxx/control?var=flash&val=value          //閃光燈 value= 0~255
-http://192.168.xxx.xxx/control?var=framesize&val=value      //解析度 value = 21->QSXGA(2560x1920), 20->P FHD(1080x1920), 19->WQXGA(2560x1600), 18->QHD(2560x1440), 17->QXGA(2048x1564), 16->P 3MP(864x1564), 15->P HD(720x1280), 14->FHD(1920x1080), 13->UXGA(1600x1200), 12->SXGA(1280x1024), 11->HD(1280x720), 10->XGA(1024x768), 9->SVGA(800x600), 8->VGA(640x480), 7->HVGA(480x320), 6->CIF(400x296), 5->QVGA(320x240), 4->240x240, 3->HQVGA(240x176), 2->QCIF(176x144), 1->QQVGA(160x120), 0->96x96
+http://192.168.xxx.xxx/control?var=framesize&val=value      //Resolution value = 21->QSXGA(2560x1920), 20->P FHD(1080x1920), 19->WQXGA(2560x1600), 18->QHD(2560x1440), 17->QXGA(2048x1564), 16->P 3MP(864x1564), 15->P HD(720x1280), 14->FHD(1920x1080), 13->UXGA(1600x1200), 12->SXGA(1280x1024), 11->HD(1280x720), 10->XGA(1024x768), 9->SVGA(800x600), 8->VGA(640x480), 7->HVGA(480x320), 6->CIF(400x296), 5->QVGA(320x240), 4->240x240, 3->HQVGA(240x176), 2->QCIF(176x144), 1->QQVGA(160x120), 0->96x96
 http://192.168.xxx.xxx/control?var=quality&val=value        //畫質 value = 4 ~ 63
 http://192.168.xxx.xxx/control?var=brightness&val=value     //亮度 value = -3 ~ 3
 http://192.168.xxx.xxx/control?var=contrast&val=value       //對比 value = -3 ~ 3
@@ -37,7 +39,7 @@ http://192.168.xxx.xxx/control?var=special_effect&val=value //特效 value = 0 ~
 http://192.168.xxx.xxx/control?var=awb&val=value            //白平衡 value = 0 or 1 
 http://192.168.xxx.xxx/control?var=dcw&val=value            //使用自訂影像尺寸 value = 0 or 1 
 http://192.168.xxx.xxx/control?var=awb_gain&val=value       //自動白平衡增益 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=wb_mode&val=value        //白平衡模式 value = 0自動，1晴天，2陰天，3日光燈，4鎢絲燈
+http://192.168.xxx.xxx/control?var=wb_mode&val=value        //白平衡模式 value = 0自動, 1晴天, 2陰天, 3日光燈, 4鎢絲燈
 http://192.168.xxx.xxx/control?var=aec&val=value            //自動曝光感測器 value = 0 or 1 
 http://192.168.xxx.xxx/control?var=aec_value&val=value      //曝光值 value = 0 ~ 1920
 http://192.168.xxx.xxx/control?var=aec2&val=value           //自動曝光控制 value = 0 or 1 
@@ -45,8 +47,8 @@ http://192.168.xxx.xxx/control?var=agc&val=value            //自動增益控制
 http://192.168.xxx.xxx/control?var=agc_gain&val=value       //自動增益(關閉時) value = 0 ~ 30
 http://192.168.xxx.xxx/control?var=raw_gma&val=value        //原始伽瑪 value = 0 or 1 
 http://192.168.xxx.xxx/control?var=lenc&val=value           //鏡頭校正 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=hmirror&val=value        //水平鏡像 value = 0 or 1 
-http://192.168.xxx.xxx/control?var=vflip&val=value          //垂直翻轉 value = 0 or 1 
+http://192.168.xxx.xxx/control?var=hmirror&val=value        //Horizontal mirror value = 0 or 1 
+http://192.168.xxx.xxx/control?var=vflip&val=value          //Vertical flip value = 0 or 1 
 http://192.168.xxx.xxx/control?var=bpc&val=value            //黑色像素校正 value = 0 or 1
 http://192.168.xxx.xxx/control?var=wpc&val=value            //白色像素校正 value = 0 or 1 
 http://192.168.xxx.xxx/control?var=colorbar&val=value       //顏色條畫面 value = 0 or 1
@@ -212,7 +214,7 @@ void setup() {
   WiFi.mode(WIFI_AP_STA);
   
   for (int i=0;i<2;i++) {
-    WiFi.begin(ssid, password);    //執行網路連線
+    WiFi.begin(ssid, password);    //Start network connection
   
     delay(1000);
     Serial.println("");

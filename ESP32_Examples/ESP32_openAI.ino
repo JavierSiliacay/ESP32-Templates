@@ -1,7 +1,9 @@
 /* 
 ESP32 Use ChatGPT API (GPT-3.5)
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2023-6-12 19:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Tutorial
 https://beta.openai.com/docs/guides/completion

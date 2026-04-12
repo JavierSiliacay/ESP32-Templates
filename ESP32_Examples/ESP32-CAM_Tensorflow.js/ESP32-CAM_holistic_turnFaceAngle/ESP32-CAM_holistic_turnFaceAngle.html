@@ -4,8 +4,10 @@ ESP32-CAM Mediapipe Holistic
 
 https://google.github.io/mediapipe/solutions/holistic.html
 
-Author : ChungYi Fu (Kaohsiung, Taiwan)   2021/7/7 20:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Try it!
 https://fustyles.github.io/webduino/TensorFlow/Holistic_video/ESP32-CAM_holistic_turnFaceAngle.html
@@ -355,7 +357,7 @@ https://fustyles.github.io/webduino/TensorFlow/Holistic_video/ESP32-CAM_holistic
         <script src="https:\/\/cdn.jsdelivr.net/npm/@mediapipe/holistic@0.4/holistic.js" crossorigin="anonymous"></script>      
     </head>
     <body>
-    ESP32-CAM IP：<input type="text" id="ip" size="20" value="192.168.">&nbsp;&nbsp;<input type="button" value="Set" onclick="start();">
+    ESP32-CAM IP: <input type="text" id="ip" size="20" value="192.168.">&nbsp;&nbsp;<input type="button" value="Set" onclick="start();">
     <figure>
       <div id="stream-container" class="image-container hidden">
         <div class="close" id="close-stream">×</div>
@@ -521,7 +523,7 @@ https://fustyles.github.io/webduino/TensorFlow/Holistic_video/ESP32-CAM_holistic
 		async function DetectImage() {
 		  holistic.send({image: aiView}).then(res => {
 			message.innerHTML = "";
-			setTimeout(function(){aiStill.click();},100);   //若無法取得畫面可能是硬體效能不足，可改此行程式碼，依硬體效能變更等待時間毫秒數 
+			setTimeout(function(){aiStill.click();},100);   //若無法取得畫面可能是硬體效能不足, 可改此行程式碼, 依硬體效能變更等待時間毫秒數 
 		  }); 
 		}
 		
@@ -846,7 +848,7 @@ https://fustyles.github.io/webduino/TensorFlow/Holistic_video/ESP32-CAM_holistic
             }
           }
           
-          //新增重啟電源按鈕點選事件 (自訂指令格式：http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9)
+          //新增重啟電源按鈕點選事件 (自訂指令格式: http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9)
           restartButton.onclick = () => {
             fetch(baseHost+"/control?restart");
           }

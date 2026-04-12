@@ -1,12 +1,14 @@
 /*
 ESP32-CAM Control two Servos and send a captured photo by Gmail.
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2020-1-18 16:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Servo1 -> gpio2 (common ground)
 Servo2 -> gpio13 (common ground)
 
-建立Google Apps Script，可應用於雲端硬碟、試算表等存取。設定權限任何能都能存取。
+建立Google Apps Script, 可應用於雲端硬碟、試算表等存取。設定權限任何能都能存取。
 https://github.com/fustyles/webduino/blob/gs/SendCapturedImageByGmail_doPost.gs
 
 如何新增Script
@@ -22,7 +24,7 @@ https://drive.google.com/drive/my-drive
 http://APIP/?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 http://STAIP/?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
 
-預設AP端IP： 192.168.4.1
+預設AP端IP:  192.168.4.1
 http://192.168.xxx.xxx/?ip
 http://192.168.xxx.xxx/?mac
 http://192.168.xxx.xxx/?restart
@@ -33,9 +35,9 @@ http://192.168.xxx.xxx/?getstill
 http://192.168.xxx.xxx/?SendCapturedImage=stop
 http://192.168.xxx.xxx/?framesize=size     //size= UXGA|SXGA|XGA|SVGA|VGA|CIF|QVGA|HQVGA|QQVGA (支援格式)
       
-查詢Client端IP：
-查詢IP：http://192.168.4.1/?ip
-重設網路：http://192.168.4.1/?resetwifi=ssid;password
+查詢Client端IP: 
+查詢IP: http://192.168.4.1/?ip
+重設網路: http://192.168.4.1/?resetwifi=ssid;password
 */
 
 //輸入WIFI連線帳號密碼
@@ -51,9 +53,9 @@ String myScript = "/macros/s/**********/exec";    //Create your Google Apps Scri
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include "esp_camera.h"          //視訊
-#include "Base64.h"              //用於轉換視訊影像格式為base64格式，易於上傳google雲端硬碟或資料庫
-#include "soc/soc.h"             //用於電源不穩不重開機 
-#include "soc/rtc_cntl_reg.h"    //用於電源不穩不重開機
+#include "Base64.h"              //用於轉換視訊影像格式為base64格式, 易於上傳google雲端硬碟或資料庫
+#include "soc/soc.h"             //For power instability non-reset 
+#include "soc/rtc_cntl_reg.h"    //For power instability non-reset
 #include <esp32-hal-ledc.h>      //伺服馬達
 
 // WARNING!!! Make sure that you have either selected ESP32 Wrover Module,
@@ -274,13 +276,13 @@ void ExecuteCommand()
 }
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
   
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  //Enable debug output
   Serial.println();
 
-  //視訊組態設定
+  //Video configuration settings
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -302,7 +304,7 @@ void setup() {
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   //https://github.com/espressif/esp32-camera/blob/master/driver/include/sensor.h
-  config.pixel_format = PIXFORMAT_JPEG;    //影像格式：RGB565|YUV422|GRAYSCALE|JPEG|RGB888|RAW|RGB444|RGB555
+  config.pixel_format = PIXFORMAT_JPEG;    //影像格式: RGB565|YUV422|GRAYSCALE|JPEG|RGB888|RAW|RGB444|RGB555
   //init with high specs to pre-allocate larger buffers
   if(psramFound()){
     config.frame_size = FRAMESIZE_UXGA;
@@ -314,7 +316,7 @@ void setup() {
     config.fb_count = 1;
   }
   
-  //視訊初始化
+  //Video initialization
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed with error 0x%x", err);
@@ -344,7 +346,7 @@ void setup() {
   //指定Client端靜態IP
   //WiFi.config(IPAddress(192, 168, 201, 100), IPAddress(192, 168, 201, 2), IPAddress(255, 255, 255, 0));
 
-  WiFi.begin(ssid, password);    //執行網路連線
+  WiFi.begin(ssid, password);    //Start network connection
 
   delay(1000);
   Serial.println("");
@@ -354,11 +356,11 @@ void setup() {
   long int StartTime=millis();
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    if ((StartTime+10000) < millis()) break;    //等待10秒連線
+    if ((StartTime+10000) < millis()) break;    //Wait 10 seconds for connection
   } 
 
-  if (WiFi.status() == WL_CONNECTED) {    //若連線成功
-    WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+  if (WiFi.status() == WL_CONNECTED) {    //If connection successful
+    WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //Set SSID to show client IP         
     Serial.println("");
     Serial.println("STAIP address: ");
     Serial.println(WiFi.localIP()); 
@@ -571,7 +573,7 @@ String SendCapturedImage(String myRecipient, String mySubject) {
   return getBody;
 }
 
-//拆解命令字串置入變數
+//Decompose command string and put into variables
 void getCommand(char c)
 {
   if (c=='?') ReceiveState=1;

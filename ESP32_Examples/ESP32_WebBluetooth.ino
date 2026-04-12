@@ -1,7 +1,9 @@
 /*
 Web Bluetooth for ESP32
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2022-1-15 15:30
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 Try it
 https://fustyles.github.io/webduino/WebBluetooth.html
@@ -37,7 +39,7 @@ class ServerCallbacks: public BLEServerCallbacks {
     }
 };
 
-//callback  para envendos das características
+// Callback for characteristic events
 class CharacteristicCallbacks: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *characteristic) {
       std::string rxValue = characteristic->getValue(); 

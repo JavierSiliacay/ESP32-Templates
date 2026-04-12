@@ -1,7 +1,9 @@
 /*
 ESP32-CAM PIR人體移動感測器啟動影像上傳Google試算表
-Author : ChungYi Fu (Kaohsiung, Taiwan)  2021-6-30 00:00
-https://www.facebook.com/francefu
+Author: Javier G. Siliacay (USTP-CDO)
+Facebook: https://www.facebook.com/siliacayjavier
+
+Credits: Special thanks to my friend, an enthusiast in developing devices like Flipper and similar tools.
 
 PIR人體移動感測器 -> GND, IO13, 3.3V
 
@@ -32,7 +34,7 @@ function doPost(e) {
   sheet.insertImage(blob, myCellRow, myCellCol);
 
   var images = sheet.getImages();
-  while (images.length>2) {   //影像數超過兩張即刪除最早影像，僅保留最新兩張影像
+  while (images.length>2) {   //影像數超過兩張即刪除最早影像, 僅保留最新兩張影像
     images[0].remove();
   }
      
@@ -60,12 +62,12 @@ String myCellCol = "&myCellCol=1";
 #include <WiFiClientSecure.h>
 #include "soc/soc.h"
 #include "soc/rtc_cntl_reg.h"
-#include "Base64.h"  //不可使用Arduino IDE內建的函式庫，請從github下載Base64.cpp, Base64.h置於同一資料夾
+#include "Base64.h"  //不可使用Arduino IDE內建的函式庫, 請從github下載Base64.cpp, Base64.h置於同一資料夾
 #include "esp_camera.h"
 
 //Arduino IDE開發版選擇 ESP32 Wrover Module
 
-//ESP32-CAM 安信可模組腳位設定
+//Ai-Thinker module pin settings
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM      0
@@ -85,10 +87,10 @@ String myCellCol = "&myCellCol=1";
 
 void setup()
 {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //Disable brownout reset
     
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  //Enable debug output
   Serial.println();
 
   camera_config_t config;
@@ -120,7 +122,7 @@ void setup()
   //   
   // if PSRAM IC present, init with UXGA resolution and higher JPEG quality
   //                      for larger pre-allocated frame buffer.
-  if(psramFound()){  //是否有PSRAM(Psuedo SRAM)記憶體IC
+  if(psramFound()){  //Whether there is PSRAM memory IC
     config.frame_size = FRAMESIZE_UXGA;
     config.jpeg_quality = 10;
     config.fb_count = 2;
@@ -130,14 +132,14 @@ void setup()
     config.fb_count = 1;
   }
 
-  //視訊初始化
+  //Video initialization
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed with error 0x%x", err);
     ESP.restart();
   }
 
-  //可自訂視訊框架預設大小(解析度大小)
+  //Customizable default frame size
   sensor_t * s = esp_camera_sensor_get();
   // initial sensors are flipped vertically and colors are a bit saturated
   if (s->id.PID == OV3660_PID) {
@@ -146,10 +148,10 @@ void setup()
     s->set_saturation(s, -2); // lower the saturation
   }
   // drop down frame size for higher initial frame rate
-  s->set_framesize(s, FRAMESIZE_QVGA);    //解析度 UXGA(1600x1200), SXGA(1280x1024), XGA(1024x768), SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
+  s->set_framesize(s, FRAMESIZE_QVGA);    //Resolution UXGA(1600x1200), SXGA(1280x1024), XGA(1024x768), SVGA(800x600), VGA(640x480), CIF(400x296), QVGA(320x240), HQVGA(240x176), QQVGA(160x120), QXGA(2048x1564 for OV3660)
 
-  //s->set_vflip(s, 1);  //垂直翻轉
-  //s->set_hmirror(s, 1);  //水平鏡像
+  //s->set_vflip(s, 1);  //Vertical flip
+  //s->set_hmirror(s, 1);  //Horizontal mirror
 
   //閃光燈(GPIO4)
   ledcAttachPin(4, 4);  
@@ -158,7 +160,7 @@ void setup()
   WiFi.mode(WIFI_STA);
   
   for (int i=0;i<2;i++) {
-    WiFi.begin(ssid, password);    //執行網路連線
+    WiFi.begin(ssid, password);    //Start network connection
   
     delay(1000);
     Serial.println("");
@@ -168,10 +170,10 @@ void setup()
     long int StartTime=millis();
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
-        if ((StartTime+5000) < millis()) break;    //等待10秒連線
+        if ((StartTime+5000) < millis()) break;    //Wait 10 seconds for connection
     } 
   
-    if (WiFi.status() == WL_CONNECTED) {    //若連線成功
+    if (WiFi.status() == WL_CONNECTED) {    //If connection successful
       Serial.println("");
       Serial.println("STAIP address: ");
       Serial.println(WiFi.localIP());
@@ -188,7 +190,7 @@ void setup()
     }
   } 
 
-  if (WiFi.status() != WL_CONNECTED) {  //若連線失敗
+  if (WiFi.status() != WL_CONNECTED) {  //If connection failed
     ESP.restart();  //重啟電源
   } 
           
@@ -209,7 +211,7 @@ void loop()
   if (v==1) {
     SendCapturedImage2Spreadsheet();
     //Serial.println(SendCapturedImage2Spreadsheet());  //取回傳送結果輸出序列埠
-    delay(5000);  //視延遲時間設定，最小為5秒
+    delay(5000);  //視延遲時間設定, 最小為5秒
   }
   else
     delay(1000);
