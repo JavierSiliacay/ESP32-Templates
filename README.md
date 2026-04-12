@@ -5,8 +5,11 @@ Welcome to the **ESP32-Templates** repository! This is a curated collection of E
 <p align="center">
   <img src="https://img.shields.io/badge/Arduino-00979D?style=for-the-badge&logo=Arduino&logoColor=white" />
   <img src="https://img.shields.io/badge/ESP32-E7352C?style=for-the-badge&logo=Espressif&logoColor=white" />
+  <img src="https://img.shields.io/badge/ESP32--CAM-E7352C?style=for-the-badge&logo=Espressif&logoColor=white" />
+  <img src="https://img.shields.io/badge/ESP8266-E7352C?style=for-the-badge&logo=Espressif&logoColor=white" />
+  <img src="https://img.shields.io/badge/LinkIt--7697-FF6B00?style=for-the-badge&logo=MediaTek&logoColor=white" />
+  <img src="https://img.shields.io/badge/Ameba--Pro_2-005E9B?style=for-the-badge&logo=Realtek&logoColor=white" />
   <img src="https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white" />
-  <img src="https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white" />
   <img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=Telegram&logoColor=white" />
   <img src="https://img.shields.io/badge/Google_Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white" />
   <img src="https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white" />
