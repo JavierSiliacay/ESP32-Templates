@@ -56,3 +56,9 @@ Special thanks to my friend, an enthusiast in developing devices like Flipper Ze
 
 ---
 *Developed for the USTP Autotronics Community and the open-source electronics community.*
+
+---
+
+### 🌐 Connect with Me
+- **Facebook:** [Javier Siliacay](https://www.facebook.com/siliacayjavier)
+- **Instagram:** [@yaboi_vier](https://www.instagram.com/yaboi_vier)
