@@ -55,7 +55,7 @@ To use these templates, ensure you have the following set up:
 ---
 
 ## 🙌 Credits & Acknowledgments
-Special thanks to my friend, an enthusiast in developing devices like Flipper Zero and similar hardware tools, for providing valuable insights and inspiration for these projects.(can't mention his github profile due to his repositories full of illegal devices like jammers, etc.)
+Special thanks to my friend, a hardware enthusiast specializing in tools like the Flipper Zero, for the inspiration and technical insights provided for these projects. Note that I am unable to share his GitHub profile or name as his repositories contain various illegal devices and restricted hardware tools, such as jammers.
 
 ---
 *Developed for the USTP Autotronics Community and the open-source electronics community.*
