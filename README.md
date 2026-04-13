@@ -58,9 +58,8 @@ To use these templates, ensure you have the following set up:
 Special thanks to my friend, a hardware enthusiast specializing in tools like the Flipper Zero, for the inspiration and technical insights provided for these projects. Note that I am unable to share his GitHub profile or name as his repositories contain various illegal devices and restricted hardware tools, such as jammers.
 
 <div align="center">
-  <video src="assets/myfriendproof.mp4" width="600" controls>
-    Your browser does not support the video tag.
-  </video>
+  <br>
+  <img src="assets/myfriendproof.mp4" width="600">
 </div>
 
 ---
