@@ -1,4 +1,4 @@
-# 🚀 ESP32 Templates & Examples
+# ESP32 Templates & Examples
 
 Welcome to the **ESP32-Templates** repository! This is a curated collection of ESP32 and ESP32-CAM examples, templates, and projects.
 
