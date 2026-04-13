@@ -59,7 +59,7 @@ Special thanks to my friend, a hardware enthusiast specializing in tools like th
 
 <div align="center">
   <br>
-  <img src="assets/myfriendproof.mp4" width="600">
+  <img src="assets/myfriendproof.png" width="600">
 </div>
 
 ---
